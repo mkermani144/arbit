@@ -1,1 +1,3 @@
-# Arbitrage
+# Arbit
+
+Arbit makes arbitrage simple.
