@@ -1,10 +1,15 @@
+interface AmountWithDecimal {
+  amount: bigint;
+  decimals: number;
+}
+
 /**
  * A provider is anything that have markets for swapping pairs (e.g. Uniswap is
  * a provider and its LPs are the markets)
  */
 export interface Provider {
-  x2y(marketId: string, amount: bigint): bigint;
-  y2x(marketId: string, amount: bigint): bigint;
+  x2y(marketId: string, amount: AmountWithDecimal): AmountWithDecimal;
+  y2x(marketId: string, amount: AmountWithDecimal): AmountWithDecimal;
 }
 
 /**
