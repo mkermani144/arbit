@@ -1,4 +1,4 @@
-interface AmountWithDecimal {
+export interface AmountWithDecimal {
   amount: bigint;
   decimals: number;
 }
@@ -8,8 +8,8 @@ interface AmountWithDecimal {
  * a provider and its LPs are the markets)
  */
 export interface Provider {
-  x2y(marketId: string, amount: AmountWithDecimal): AmountWithDecimal;
-  y2x(marketId: string, amount: AmountWithDecimal): AmountWithDecimal;
+  x2y(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
+  y2x(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
 }
 
 /**
