@@ -1,7 +1,6 @@
 import { AmountWithDecimal, Provider } from "@/types/core";
 import { AmmPool, makeNativePools, Pools } from "@ergolabs/ergo-dex-sdk";
 import { AssetAmount, Explorer, RustModule } from "@ergolabs/ergo-sdk";
-import axios from "axios";
 
 class Splash implements Provider {
   private baseUrl: string;
@@ -12,14 +11,16 @@ class Splash implements Provider {
 
   async getOrderBook(marketId: string) {
     try {
-      const response = await axios.get(
-        `${this.baseUrl}/platform-api/v1/trading-view/order-book`,
+      const response = await fetch(
+        `${this.baseUrl}/platform-api/v1/trading-view/order-book?base=${marketId}&quote=.`,
         {
-          params: { base: marketId, quote: "." },
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-      response.data;
-      return response.data;
+      return response.json();
     } catch (error) {
       console.error("Error fetching order book:", error);
       throw new Error("Failed to fetch order book");
@@ -29,10 +30,10 @@ class Splash implements Provider {
   async x2y(marketId: string, amount: AmountWithDecimal) {
     const orderBook = await this.getOrderBook(marketId);
 
-    const spot = orderBook.spot;
+    const ask = orderBook.asks[0].price;
 
     return {
-      amount: spot.toFixed(amount.decimals),
+      amount: ask.toFixed(amount.decimals),
       decimals: amount.decimals,
     };
   }
@@ -40,7 +41,7 @@ class Splash implements Provider {
   async y2x(marketId: string, amount: AmountWithDecimal) {
     const orderBook = await this.getOrderBook(marketId);
 
-    const spot = orderBook.spot;
+    const spot = orderBook.bids[0].price;
 
     return {
       amount: spot.toFixed(amount.decimals),
