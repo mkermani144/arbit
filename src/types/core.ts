@@ -10,6 +10,10 @@ export interface AmountWithDecimal {
 export interface Provider {
   x2y(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
   y2x(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
+  getX(marketId: string): Promise<string>;
+  getY(marketId: string): Promise<string>;
+  assetValue(assetId: string, amount: AmountWithDecimal): Promise<number>;
+  usdToAsset(assetId: string, usd: number): Promise<AmountWithDecimal>;
 }
 
 /**
@@ -52,3 +56,31 @@ export type ArbitrategyChain = Link[];
  * Arbitrategy indicates a set of chains that we are going to manipulate
  */
 export type Arbitrategy = ArbitrategyChain[];
+
+/**
+ * A single trade on a link (within an arbitrategy chain)
+ */
+export interface TradeLink extends Link {
+  input: AmountWithDecimal;
+  output: AmountWithDecimal;
+}
+
+/**
+ * A sequence of trades executed within a single arbitrategy chain
+ * Each trade in the path contributes to the overall profit calculation
+ */
+export type TradePath = TradeLink[];
+
+export interface Profit {
+  usd: number;
+  percent: number;
+}
+
+/**
+ * The final result of arbitrategy execution, including full trading history and
+ * final profit
+ */
+export interface ArbitResult {
+  tradePath: TradePath;
+  profit: Profit;
+}
