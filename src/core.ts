@@ -29,13 +29,10 @@ export class ArbitCore {
     tradeInput: AmountWithDecimal
   ): Promise<TradeLink> => {
     const provider = this.providerMap.get(link.providerId)!;
-    let tradeOutput: AmountWithDecimal;
-    switch (link.swapType) {
-      case "x2y":
-        tradeOutput = await provider.x2y(link.marketId, tradeInput);
-      case "y2x":
-        tradeOutput = await provider.y2x(link.marketId, tradeInput);
-    }
+    const tradeOutput = await provider[link.swapType](
+      link.marketId,
+      tradeInput
+    );
     return {
       ...link,
       input: tradeInput,
@@ -46,9 +43,9 @@ export class ArbitCore {
   /**
    * Execute the arbitrategy chain with the specified fund and compute the
    * results
-   * The arbitrategy is profitable if the primary token is increased after 
-   * after completing the trades
-   * 
+   * The arbitrategy is profitable if the primary asset is increased after
+   * completing the trades
+   *
    * @param arbitrategyChain
    * @param fund
    * @returns the arbitrategy result including trading path and profit
@@ -67,7 +64,7 @@ export class ArbitCore {
       case "y2x":
         primaryAssetId = await startingProvider.getY(startingLink.marketId);
     }
-    const startingAssetAmount = await startingProvider.usdToAsset(
+    const startingAssetAmount = await startingProvider.usd2asset(
       primaryAssetId,
       fund
     );
@@ -80,7 +77,7 @@ export class ArbitCore {
       finalTradePath.push(tradeLink);
     }
     // Compute profit
-    const finalAssetValue = await startingProvider.assetValue(
+    const finalAssetValue = await startingProvider.asset2usd(
       primaryAssetId,
       assetAmount
     );

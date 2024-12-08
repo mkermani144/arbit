@@ -12,8 +12,8 @@ export interface Provider {
   y2x(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
   getX(marketId: string): Promise<string>;
   getY(marketId: string): Promise<string>;
-  assetValue(assetId: string, amount: AmountWithDecimal): Promise<number>;
-  usdToAsset(assetId: string, usd: number): Promise<AmountWithDecimal>;
+  asset2usd(assetId: string, amount: AmountWithDecimal): Promise<number>;
+  usd2asset(assetId: string, usd: number): Promise<AmountWithDecimal>;
 }
 
 /**
