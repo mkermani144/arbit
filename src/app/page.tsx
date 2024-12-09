@@ -1,14 +1,43 @@
+import simpleArbitrategy from "@/arbitrategy";
+import { ArbitCore } from "@/core";
+import ErgoDex from "@/providers/ergodex";
+
 import GithubRepo from "@/components/github-repo";
 import HeroPrice from "@/components/hero-price";
 import { ModeToggle } from "@/components/mode-toggle";
 import Step from "@/components/step";
 
-/**
- * TODO: Remove placeholder data in favor of real data when core module is
- * implemented
- * https://github.com/ConnecMent/arbit/issues/17
- */
-export default function Home() {
+const providers: Record<string, { name: string; link: string }> = {
+  ergodex: {
+    name: "ErgoDex",
+    link: "https://ergodex.io",
+  },
+  splash: {
+    name: "Splash",
+    link: "https://splash.trade",
+  },
+};
+
+export default async function Home() {
+  const arbitResults = new ArbitCore(
+    simpleArbitrategy,
+    new Map([["ergodex", new ErgoDex("https://api.ergoplatform.com")]])
+  );
+
+  const allArbitResults = await arbitResults.start();
+  const topProfitableResult = allArbitResults.reduce(
+    (topCandidate, arbitResult) =>
+      arbitResult.profit.usd > topCandidate.profit.usd
+        ? arbitResult
+        : topCandidate,
+    /**
+     * Instead of showing zero, we should show an empty screen if no arbit is
+     * profitable
+     * https://github.com/ConnecMent/arbit/issues/31
+     */
+    { profit: { usd: 0, percent: 0 }, tradePath: [] }
+  );
+
   return (
     <div className="flex h-screen w-full items-center justify-center flex-col px-4">
       <div className="fixed top-4 left-4">
@@ -23,28 +52,34 @@ export default function Home() {
         </div>
       </div>
       <div className="flex items-end gap-2">
-        <HeroPrice usd={19.7} percent={5.3} />
+        <HeroPrice
+          usd={topProfitableResult.profit.usd}
+          percent={topProfitableResult.profit.percent}
+        />
       </div>
       <p className="text-sm text-muted-foreground mt-4">
-        Top profit right now. All fees considered. 5% slippage.
+        Top profit right now. All fees are considered based on a best guess.
+        Take care of slippage.
       </p>
       <div className="flex mt-8 gap-4">
-        <Step
-          fromToken="ERG"
-          fromAmount={100}
-          toToken="rsADA"
-          toAmount={200}
-          providerName="ErgoDex"
-          providerLink="https://www.ergodex.io/ergo/swap?base=0000000000000000000000000000000000000000000000000000000000000000&quote=e023c5f382b6e96fbd878f6811aac73345489032157ad5affb84aefd4956c297&initialPoolId=ae97c5eccd59a065cd973a8d6afb8bb79f9cc70368a7dcdf73aaeab1cedf6f6b"
-        />
-        <Step
-          fromToken="ADA"
-          fromAmount={200}
-          toToken="rsERG"
-          toAmount={109.8}
-          providerName="Splash"
-          providerLink="https://app.splash.trade/04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb147273455247-ADA"
-        />
+        {topProfitableResult.tradePath.map((tradeLink) => {
+          const fromToken =
+            tradeLink.swapType === "x2y" ? tradeLink.x : tradeLink.y;
+          const toToken =
+            tradeLink.swapType === "x2y" ? tradeLink.y : tradeLink.x;
+
+          return (
+            <Step
+              key={tradeLink.marketId}
+              fromToken={fromToken.name}
+              fromAmount={tradeLink.input / 10 ** fromToken.decimals}
+              toToken={toToken.name}
+              toAmount={tradeLink.output / 10 ** toToken.decimals}
+              providerName={providers[tradeLink.providerId].name}
+              providerLink={providers[tradeLink.providerId].link}
+            />
+          );
+        })}
       </div>
     </div>
   );
