@@ -1,4 +1,4 @@
-import { AmountWithDecimal, Provider } from "@/types/core";
+import { Provider } from "@/types/core";
 import { AmmPool, makeNativePools, Pools } from "@ergolabs/ergo-dex-sdk";
 import { AssetAmount, Explorer, RustModule } from "@ergolabs/ergo-sdk";
 
@@ -11,10 +11,10 @@ class ErgoDex implements Provider {
     this.pools = makeNativePools(new Explorer(url));
   }
 
-  async x2y(marketId: string, amount: AmountWithDecimal) {
+  async x2y(marketId: string, amount: number) {
     const pool = await this.pools.get(marketId);
     const outputAmount = await pool?.outputAmount({
-      amount: amount.amount,
+      amount,
       asset: pool.assetX,
     } as unknown as AssetAmount);
 
@@ -22,16 +22,13 @@ class ErgoDex implements Provider {
       throw new Error("Output amount or decimals is unexpected");
     }
 
-    return {
-      amount: outputAmount.amount,
-      decimals: outputAmount.asset.decimals,
-    };
+    return Number(outputAmount.amount);
   }
 
-  async y2x(marketId: string, amount: AmountWithDecimal) {
+  async y2x(marketId: string, amount: number) {
     const pool = await this.pools.get(marketId);
     const outputAmount = await pool?.outputAmount({
-      amount: amount.amount,
+      amount,
       asset: pool.assetY,
     } as unknown as AssetAmount);
 
@@ -39,10 +36,7 @@ class ErgoDex implements Provider {
       throw new Error("Output amount or decimals is unexpected");
     }
 
-    return {
-      amount: outputAmount.amount,
-      decimals: outputAmount.asset.decimals,
-    };
+    return Number(outputAmount.amount);
   }
 }
 
