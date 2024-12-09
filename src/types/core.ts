@@ -31,25 +31,25 @@ export type SwapType = "x2y" | "y2x";
  *   mapping: 'xx',
  * }
  */
+export interface AssetInfo {
+  name: string;
+  coingeckoId: string;
+  decimals: number;
+}
+
 export interface Link {
   providerId: string;
   marketId: string;
   swapType: SwapType;
+  x: AssetInfo;
+  y: AssetInfo;
 }
 
-export interface PrimaryAsset {
-  coingeckoId: string;
-  decimals: number;
-}
 /**
  * An arbitrategy chain is a complete set of markets (possibly on different
  * providers) that we manipulate to earn profit
  */
-export type ArbitrategyChain = {
-  chain: Link[];
-  primaryAsset: PrimaryAsset;
-};
-
+export type ArbitrategyChain = Link[];
 /**
  * Arbitrategy indicates a set of chains that we are going to manipulate
  */

@@ -1,4 +1,4 @@
-import { PrimaryAsset } from "./types/core";
+import { AssetInfo } from "./types/core";
 
 const fetchPrice = async (coingeckoId: string) => {
   const response: {
@@ -14,13 +14,13 @@ const fetchPrice = async (coingeckoId: string) => {
   return response[coingeckoId].usd;
 };
 
-export const asset2usd = async (asset: PrimaryAsset, amount: number) => {
+export const asset2usd = async (asset: AssetInfo, amount: number) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
   return (assetValue * amount) / 10 ** asset.decimals;
 };
 
-export const usd2asset = async (asset: PrimaryAsset, usd: number) => {
+export const usd2asset = async (asset: AssetInfo, usd: number) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
   return (usd * 10 ** asset.decimals) / assetValue;
