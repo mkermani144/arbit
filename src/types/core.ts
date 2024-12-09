@@ -10,10 +10,6 @@ export interface AmountWithDecimal {
 export interface Provider {
   x2y(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
   y2x(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
-  getX(marketId: string): Promise<string>;
-  getY(marketId: string): Promise<string>;
-  asset2usd(assetId: string, amount: AmountWithDecimal): Promise<number>;
-  usd2asset(assetId: string, usd: number): Promise<AmountWithDecimal>;
 }
 
 /**
@@ -50,7 +46,10 @@ export interface Link {
  * An arbitrategy chain is a complete set of markets (possibly on different
  * providers) that we manipulate to earn profit
  */
-export type ArbitrategyChain = Link[];
+export type ArbitrategyChain = {
+  chain: Link[];
+  primaryAsset: string;
+};
 
 /**
  * Arbitrategy indicates a set of chains that we are going to manipulate

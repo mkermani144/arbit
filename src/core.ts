@@ -9,6 +9,7 @@ import {
   TradeLink,
   TradePath,
 } from "./types/core";
+import { asset2usd, usd2asset } from "./utils";
 
 export class ArbitCore {
   constructor(
@@ -54,31 +55,22 @@ export class ArbitCore {
     arbitrategyChain: ArbitrategyChain,
     fund: number
   ): Promise<ArbitResult> => {
-    // Find the primary asset id and starting amount based on the specified fund
-    const startingLink = arbitrategyChain[0];
-    const startingProvider = this.providerMap.get(startingLink.providerId)!;
-    let primaryAssetId: string;
-    switch (startingLink.swapType) {
-      case "x2y":
-        primaryAssetId = await startingProvider.getX(startingLink.marketId);
-      case "y2x":
-        primaryAssetId = await startingProvider.getY(startingLink.marketId);
-    }
-    const startingAssetAmount = await startingProvider.usd2asset(
-      primaryAssetId,
+    // Calculate starting amount based on the specified fund
+    const startingAssetAmount = await usd2asset(
+      arbitrategyChain.primaryAsset,
       fund
     );
     // Create the trade path and trade assets based on arbitrategy chain
     let assetAmount = startingAssetAmount;
     const finalTradePath: TradePath = [];
-    for (const link of arbitrategyChain) {
+    for (const link of arbitrategyChain.chain) {
       const tradeLink = await this.trade(link, assetAmount);
       assetAmount = tradeLink.output;
       finalTradePath.push(tradeLink);
     }
     // Compute profit
-    const finalAssetValue = await startingProvider.asset2usd(
-      primaryAssetId,
+    const finalAssetValue = await asset2usd(
+      arbitrategyChain.primaryAsset,
       assetAmount
     );
     const profit: Profit = {
