@@ -65,14 +65,28 @@ export class ArbitCore {
       finalTradePath.push(tradeLink);
     }
     // Compute profit
-    const profitValue = await asset2usd(
+    const profitUsd = await asset2usd(
       arbitrategyChain.primaryAsset,
       assetAmount - startingAssetAmount
     );
+    /**
+     * FIXME: This method for calculating fees is imprecise and just a best
+     * guess.
+     * https://github.com/ConnecMent/arbit/issues/5
+     *
+     * Algorithm:
+     * - Ergo Dex: The LP fee is considered in the SDK. The execution and
+     * network fees can be omitted due to being quite small, and service fee is
+     * 0.3%.
+     * - Splash: Order book matching fee is 0.1 ADA + 0.05%. Network fee is at
+     * most 0.2 ADA, and execution fee is around 1 ADA.
+     *
+     * In total: 0.35% + 1.3 ADA ~= 0.35% + $2.5 (conservative)
+     */
+    const netProfitUsd = profitUsd - fund * 0.0035 - 2.5;
     const profit: Profit = {
-      usd: profitValue,
-      percent:
-        Number((assetAmount - startingAssetAmount) / startingAssetAmount) * 100,
+      usd: netProfitUsd,
+      percent: (netProfitUsd / fund) * 100,
     };
     return {
       tradePath: finalTradePath,
