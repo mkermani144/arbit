@@ -48,7 +48,7 @@ export interface Link {
  */
 export type ArbitrategyChain = {
   chain: Link[];
-  primaryAsset: string;
+  primaryAssetCoingeckoId: string;
 };
 
 /**

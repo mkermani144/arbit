@@ -57,7 +57,7 @@ export class ArbitCore {
   ): Promise<ArbitResult> => {
     // Calculate starting amount based on the specified fund
     const startingAssetAmount = await usd2asset(
-      arbitrategyChain.primaryAsset,
+      arbitrategyChain.primaryAssetCoingeckoId,
       fund
     );
     // Create the trade path and trade assets based on arbitrategy chain
@@ -69,10 +69,13 @@ export class ArbitCore {
       finalTradePath.push(tradeLink);
     }
     // Compute profit
-    const profitValue = await asset2usd(arbitrategyChain.primaryAsset, {
-      amount: assetAmount.amount - startingAssetAmount.amount,
-      decimals: startingAssetAmount.decimals,
-    });
+    const profitValue = await asset2usd(
+      arbitrategyChain.primaryAssetCoingeckoId,
+      {
+        amount: assetAmount.amount - startingAssetAmount.amount,
+        decimals: startingAssetAmount.decimals,
+      }
+    );
     const profit: Profit = {
       usd: profitValue,
       percent:
@@ -101,10 +104,7 @@ export class ArbitCore {
           arbitrategyChain,
           fundInUsd
         );
-        if (
-          !bestArbitResult ||
-          bestArbitResult.profit.usd < result.profit.usd
-        )
+        if (!bestArbitResult || bestArbitResult.profit.usd < result.profit.usd)
           bestArbitResult = result;
       }
       arbitFinalResult.push(bestArbitResult!);
