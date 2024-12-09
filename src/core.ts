@@ -1,5 +1,4 @@
 import {
-  AmountWithDecimal,
   Arbitrategy,
   ArbitrategyChain,
   ArbitResult,
@@ -25,10 +24,7 @@ export class ArbitCore {
    * @param tradeInput asset amount to trade
    * @returns the trade link
    */
-  trade = async (
-    link: Link,
-    tradeInput: AmountWithDecimal
-  ): Promise<TradeLink> => {
+  trade = async (link: Link, tradeInput: number): Promise<TradeLink> => {
     const provider = this.providerMap.get(link.providerId)!;
     const tradeOutput = await provider[link.swapType](
       link.marketId,
@@ -57,7 +53,7 @@ export class ArbitCore {
   ): Promise<ArbitResult> => {
     // Calculate starting amount based on the specified fund
     const startingAssetAmount = await usd2asset(
-      arbitrategyChain.primaryAssetCoingeckoId,
+      arbitrategyChain.primaryAsset,
       fund
     );
     // Create the trade path and trade assets based on arbitrategy chain
@@ -70,19 +66,13 @@ export class ArbitCore {
     }
     // Compute profit
     const profitValue = await asset2usd(
-      arbitrategyChain.primaryAssetCoingeckoId,
-      {
-        amount: assetAmount.amount - startingAssetAmount.amount,
-        decimals: startingAssetAmount.decimals,
-      }
+      arbitrategyChain.primaryAsset,
+      assetAmount - startingAssetAmount
     );
     const profit: Profit = {
       usd: profitValue,
       percent:
-        Number(
-          (assetAmount.amount - startingAssetAmount.amount) /
-            startingAssetAmount.amount
-        ) * 100,
+        Number((assetAmount - startingAssetAmount) / startingAssetAmount) * 100,
     };
     return {
       tradePath: finalTradePath,

@@ -1,15 +1,10 @@
-export interface AmountWithDecimal {
-  amount: bigint;
-  decimals: number;
-}
-
 /**
  * A provider is anything that have markets for swapping pairs (e.g. Uniswap is
  * a provider and its LPs are the markets)
  */
 export interface Provider {
-  x2y(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
-  y2x(marketId: string, amount: AmountWithDecimal): Promise<AmountWithDecimal>;
+  x2y(marketId: string, amount: number): Promise<number>;
+  y2x(marketId: string, amount: number): Promise<number>;
 }
 
 /**
@@ -42,13 +37,17 @@ export interface Link {
   swapType: SwapType;
 }
 
+export interface PrimaryAsset {
+  coingeckoId: string;
+  decimals: number;
+}
 /**
  * An arbitrategy chain is a complete set of markets (possibly on different
  * providers) that we manipulate to earn profit
  */
 export type ArbitrategyChain = {
   chain: Link[];
-  primaryAssetCoingeckoId: string;
+  primaryAsset: PrimaryAsset;
 };
 
 /**
@@ -60,8 +59,8 @@ export type Arbitrategy = ArbitrategyChain[];
  * A single trade on a link (within an arbitrategy chain)
  */
 export interface TradeLink extends Link {
-  input: AmountWithDecimal;
-  output: AmountWithDecimal;
+  input: number;
+  output: number;
 }
 
 /**
