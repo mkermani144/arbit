@@ -47,20 +47,20 @@ class Splash implements Provider {
     return data as OrderBookResponse;
   }
 
-  async x2y(marketId: string) {
+  async x2y(marketId: string, amount: number) {
     const orderBook = await this.getOrderBook(marketId);
 
     const ask = orderBook.asks[0].price;
 
-    return Number(ask);
+    return amount / Number(ask);
   }
 
-  async y2x(marketId: string) {
+  async y2x(marketId: string, amount: number) {
     const orderBook = await this.getOrderBook(marketId);
 
     const bid = orderBook.bids[0].price;
 
-    return Number(bid);
+    return amount / Number(bid);
   }
 }
 
