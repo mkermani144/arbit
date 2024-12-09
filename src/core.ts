@@ -17,7 +17,7 @@ export class ArbitCore {
     private providerMap: Map<string, Provider>
   ) {}
 
-  private fundRangeInUsd = [50, 100, 200, 500, 750, 1000];
+  private fundRangeInUsd = [50, 75, 100, 150, 200, 300, 500];
 
   /**
    * Trade assets on the specified link
@@ -69,13 +69,17 @@ export class ArbitCore {
       finalTradePath.push(tradeLink);
     }
     // Compute profit
-    const finalAssetValue = await asset2usd(
-      arbitrategyChain.primaryAsset,
-      assetAmount
-    );
+    const profitValue = await asset2usd(arbitrategyChain.primaryAsset, {
+      amount: assetAmount.amount - startingAssetAmount.amount,
+      decimals: startingAssetAmount.decimals,
+    });
     const profit: Profit = {
-      usd: finalAssetValue - fund,
-      percent: ((finalAssetValue - fund) / fund) * 100,
+      usd: profitValue,
+      percent:
+        Number(
+          (assetAmount.amount - startingAssetAmount.amount) /
+            startingAssetAmount.amount
+        ) * 100,
     };
     return {
       tradePath: finalTradePath,
@@ -99,7 +103,7 @@ export class ArbitCore {
         );
         if (
           !bestArbitResult ||
-          bestArbitResult.profit.percent < result.profit.percent
+          bestArbitResult.profit.usd < result.profit.usd
         )
           bestArbitResult = result;
       }
