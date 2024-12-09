@@ -60,7 +60,7 @@ class Splash implements Provider {
 
     const bid = orderBook.bids[0].price;
 
-    return amount / Number(bid);
+    return amount * Number(bid);
   }
 }
 
