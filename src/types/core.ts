@@ -13,20 +13,17 @@ export interface Provider {
 }
 
 /**
- * Mapping type of a market to the next one in an arbitrategy chain:
- * - xx: token X of this market is token X of the next market
- * - xy: token X of this market is token Y of the next market
- * - yx: token Y of this market is token X of the next market
- * - yy: token Y of this market is token Y of the next market
- * - null: used for the last market, indicating chain tail
+ * To link all markets in a arbitrategy chain we use swap type:
+ * - x2y: sell token X and buy token Y in this market
+ * - y2x: sell token Y and buy token X in this market
  *
  * @example
  * For this chain:
  * --ETH/BTC->ETH/USDT->USDT/USDC->BTC/USDC--
- * We have these mappings:
- * --xx->yx->yy->null--
+ * We have these swaps:
+ * --y2x->x2y->x2y->y2x
  */
-export type Mapping = "xx" | "xy" | "yx" | "yy" | null;
+export type SwapType = "x2y" | "y2x";
 
 /**
  * A link is a piece in the arbitrategy chain, containing provider, market id
@@ -42,16 +39,47 @@ export type Mapping = "xx" | "xy" | "yx" | "yy" | null;
 export interface Link {
   providerId: string;
   marketId: string;
-  mapping: Mapping;
+  swapType: SwapType;
 }
 
 /**
  * An arbitrategy chain is a complete set of markets (possibly on different
  * providers) that we manipulate to earn profit
  */
-export type ArbitrategyChain = Link[];
+export type ArbitrategyChain = {
+  chain: Link[];
+  primaryAsset: string;
+};
 
 /**
  * Arbitrategy indicates a set of chains that we are going to manipulate
  */
 export type Arbitrategy = ArbitrategyChain[];
+
+/**
+ * A single trade on a link (within an arbitrategy chain)
+ */
+export interface TradeLink extends Link {
+  input: AmountWithDecimal;
+  output: AmountWithDecimal;
+}
+
+/**
+ * A sequence of trades executed within a single arbitrategy chain
+ * Each trade in the path contributes to the overall profit calculation
+ */
+export type TradePath = TradeLink[];
+
+export interface Profit {
+  usd: number;
+  percent: number;
+}
+
+/**
+ * The final result of arbitrategy execution, including full trading history and
+ * final profit
+ */
+export interface ArbitResult {
+  tradePath: TradePath;
+  profit: Profit;
+}
