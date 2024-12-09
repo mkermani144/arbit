@@ -17,11 +17,11 @@ const fetchPrice = async (coingeckoId: string) => {
 export const asset2usd = async (asset: PrimaryAsset, amount: number) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
-  return (assetValue * amount) / asset.decimals;
+  return (assetValue * amount) / 10 ** asset.decimals;
 };
 
 export const usd2asset = async (asset: PrimaryAsset, usd: number) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
-  return (usd * asset.decimals) / assetValue;
+  return (usd * 10 ** asset.decimals) / assetValue;
 };
