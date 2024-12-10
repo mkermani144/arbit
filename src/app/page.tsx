@@ -1,11 +1,15 @@
 import simpleArbitrategy from "@/arbitrategy";
 import { ArbitCore } from "@/core";
+
 import ErgoDex from "@/providers/ergodex";
+import Splash from "@/providers/splash";
 
 import GithubRepo from "@/components/github-repo";
 import HeroPrice from "@/components/hero-price";
 import { ModeToggle } from "@/components/mode-toggle";
 import Step from "@/components/step";
+
+import { Provider } from "@/types/core";
 
 const providers: Record<string, { name: string; link: string }> = {
   ergodex: {
@@ -21,7 +25,10 @@ const providers: Record<string, { name: string; link: string }> = {
 export default async function Home() {
   const arbitResults = new ArbitCore(
     simpleArbitrategy,
-    new Map([["ergodex", new ErgoDex("https://api.ergoplatform.com")]])
+    new Map<string, Provider>([
+      ["ergodex", new ErgoDex("https://api.ergoplatform.com")],
+      ["splash", new Splash("https://api5.splash.trade")],
+    ])
   );
 
   const allArbitResults = await arbitResults.start();
