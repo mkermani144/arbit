@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from '@/components/theme-provider';
 
-import "./globals.css";
-import { ReactNode } from "react";
+import './globals.css';
+import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: "Arbit",
-  description: "Arbit makes arbitrage simple",
+  title: 'Arbit',
+  description: 'Arbit makes arbitrage simple',
 };
 
 interface RootLayoutProps {

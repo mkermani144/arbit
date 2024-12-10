@@ -1,13 +1,13 @@
-import { MoveRight } from "lucide-react";
-import Link from "next/link";
+import { MoveRight } from 'lucide-react';
+import Link from 'next/link';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 interface StepProps {
   fromToken: string;

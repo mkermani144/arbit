@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 
 const AppLoading = () => (
   <div className="flex items-center gap-2">

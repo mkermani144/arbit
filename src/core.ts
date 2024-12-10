@@ -7,13 +7,13 @@ import {
   Provider,
   TradeLink,
   TradePath,
-} from "./types/core";
-import { asset2usd, usd2asset } from "./utils";
+} from './types/core';
+import { asset2usd, usd2asset } from './utils';
 
 export class ArbitCore {
   constructor(
     private arbitrategy: Arbitrategy,
-    private providerMap: Map<string, Provider>
+    private providerMap: Map<string, Provider>,
   ) {}
 
   private fundRangeInUsd = [50, 75, 100, 150, 200, 300, 500];
@@ -28,7 +28,7 @@ export class ArbitCore {
     const provider = this.providerMap.get(link.providerId)!;
     const tradeOutput = await provider[link.swapType](
       link.marketId,
-      tradeInput
+      tradeInput,
     );
     return {
       ...link,
@@ -48,12 +48,12 @@ export class ArbitCore {
    */
   computeArbitProfit = async (
     arbit: Arbit,
-    fund: number
+    fund: number,
   ): Promise<ArbitResult> => {
     // Find the primary asset
     const startingLink = arbit[0];
     const primaryAsset =
-      startingLink.swapType == "x2y" ? startingLink.x : startingLink.y;
+      startingLink.swapType == 'x2y' ? startingLink.x : startingLink.y;
     // Calculate starting amount based on the specified fund
     const startingAssetAmount = await usd2asset(primaryAsset, fund);
     // Create the trade path and trade assets based on arbit
@@ -67,7 +67,7 @@ export class ArbitCore {
     // Compute profit
     const profitUsd = await asset2usd(
       primaryAsset,
-      assetAmount - startingAssetAmount
+      assetAmount - startingAssetAmount,
     );
     /**
      * FIXME: This method for calculating fees is imprecise and just a best
