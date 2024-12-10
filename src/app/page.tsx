@@ -1,11 +1,11 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import App from "./App";
-import AppLoading from "./AppLoading";
+import App from './App';
+import AppLoading from './AppLoading';
 
-import GithubRepo from "@/components/github-repo";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Badge } from "@/components/ui/badge";
+import GithubRepo from '@/components/github-repo';
+import { ModeToggle } from '@/components/mode-toggle';
+import { Badge } from '@/components/ui/badge';
 
 export default async function Home() {
   return (

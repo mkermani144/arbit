@@ -1,4 +1,4 @@
-import { Provider } from "@/types/core";
+import { Provider } from '@/types/core';
 
 type Order = {
   price: string;
@@ -35,11 +35,11 @@ class Splash implements Provider {
     const response = await fetch(
       `${this.baseUrl}/platform-api/v1/trading-view/order-book?base=${marketId}&quote=.`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      }
+      },
     );
     const data = await response.json();
     return data as OrderBookResponse;

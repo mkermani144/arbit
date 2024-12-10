@@ -1,22 +1,22 @@
-import simpleArbitrategy from "@/arbitrategy";
-import { ArbitCore } from "@/core";
+import simpleArbitrategy from '@/arbitrategy';
+import { ArbitCore } from '@/core';
 
-import ErgoDex from "@/providers/ergodex";
-import Splash from "@/providers/splash";
+import ErgoDex from '@/providers/ergodex';
+import Splash from '@/providers/splash';
 
-import HeroPrice from "@/components/hero-price";
-import Step from "@/components/step";
+import HeroPrice from '@/components/hero-price';
+import Step from '@/components/step';
 
-import { Provider } from "@/types/core";
+import { Provider } from '@/types/core';
 
 const providers: Record<string, { name: string; link: string }> = {
   ergodex: {
-    name: "ErgoDex",
-    link: "https://ergodex.io",
+    name: 'ErgoDex',
+    link: 'https://ergodex.io',
   },
   splash: {
-    name: "Splash",
-    link: "https://splash.trade",
+    name: 'Splash',
+    link: 'https://splash.trade',
   },
 };
 
@@ -24,9 +24,9 @@ const App = async () => {
   const arbitResults = new ArbitCore(
     simpleArbitrategy,
     new Map<string, Provider>([
-      ["ergodex", new ErgoDex(process.env.ERGO_EXPLORER_API_URL!)],
-      ["splash", new Splash(process.env.SPLASH_API_URL!)],
-    ])
+      ['ergodex', new ErgoDex(process.env.ERGO_EXPLORER_API_URL!)],
+      ['splash', new Splash(process.env.SPLASH_API_URL!)],
+    ]),
   );
 
   const allArbitResults = await arbitResults.start();
@@ -40,7 +40,7 @@ const App = async () => {
      * profitable
      * https://github.com/ConnecMent/arbit/issues/31
      */
-    { profit: { usd: 0, percent: 0 }, tradePath: [] }
+    { profit: { usd: 0, percent: 0 }, tradePath: [] },
   );
   return (
     <>
@@ -57,9 +57,9 @@ const App = async () => {
       <div className="flex mt-8 gap-4">
         {topProfitableResult.tradePath.map((tradeLink) => {
           const fromToken =
-            tradeLink.swapType === "x2y" ? tradeLink.x : tradeLink.y;
+            tradeLink.swapType === 'x2y' ? tradeLink.x : tradeLink.y;
           const toToken =
-            tradeLink.swapType === "x2y" ? tradeLink.y : tradeLink.x;
+            tradeLink.swapType === 'x2y' ? tradeLink.y : tradeLink.x;
 
           return (
             <Step

@@ -1,4 +1,4 @@
-import { AssetInfo } from "./types/core";
+import { AssetInfo } from './types/core';
 
 const fetchPrice = async (coingeckoId: string) => {
   const response: {
@@ -8,7 +8,7 @@ const fetchPrice = async (coingeckoId: string) => {
   } = await (
     await fetch(
       `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd`,
-      { cache: "force-cache", next: { revalidate: 60 } }
+      { cache: 'force-cache', next: { revalidate: 60 } },
     )
   ).json();
 

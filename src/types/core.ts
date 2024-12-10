@@ -18,7 +18,7 @@ export interface Provider {
  * We have these swaps:
  * --y2x->x2y->x2y->y2x
  */
-export type SwapType = "x2y" | "y2x";
+export type SwapType = 'x2y' | 'y2x';
 
 /**
  * A link is a piece in the arbit, containing provider, market id (e.g. LP id)

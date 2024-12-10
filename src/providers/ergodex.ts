@@ -1,11 +1,11 @@
-import { Provider } from "@/types/core";
+import { Provider } from '@/types/core';
 import {
   AmmPool,
   makeNativePools,
   makeTokenPools,
   Pools,
-} from "@ergolabs/ergo-dex-sdk";
-import { AssetAmount, Explorer, RustModule } from "@ergolabs/ergo-sdk";
+} from '@ergolabs/ergo-dex-sdk';
+import { AssetAmount, Explorer, RustModule } from '@ergolabs/ergo-sdk';
 
 await RustModule.load();
 
@@ -31,7 +31,7 @@ class ErgoDex implements Provider {
     } as unknown as AssetAmount);
 
     if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
-      throw new Error("Output amount or decimals is unexpected");
+      throw new Error('Output amount or decimals is unexpected');
     }
 
     return Number(outputAmount.amount);
@@ -50,7 +50,7 @@ class ErgoDex implements Provider {
     } as unknown as AssetAmount);
 
     if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
-      throw new Error("Output amount or decimals is unexpected");
+      throw new Error('Output amount or decimals is unexpected');
     }
 
     return Number(outputAmount.amount);
