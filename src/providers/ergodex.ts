@@ -4,10 +4,10 @@ import {
   makeNativePools,
   makeTokenPools,
   Pools,
-} from '@ergolabs/ergo-dex-sdk';
-import { AssetAmount, Explorer, RustModule } from '@ergolabs/ergo-sdk';
+} from '@patternglobal/ergo-dex-sdk';
+import { AssetAmount, Explorer, RustModule } from '@patternglobal/ergo-sdk';
 
-await RustModule.load();
+await RustModule.load(true);
 
 class ErgoDex implements Provider {
   private nativePools: Pools<AmmPool>;
