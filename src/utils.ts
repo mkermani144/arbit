@@ -7,7 +7,8 @@ const fetchPrice = async (coingeckoId: string) => {
     };
   } = await (
     await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd`
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd`,
+      { cache: "force-cache", next: { revalidate: 60 } }
     )
   ).json();
 

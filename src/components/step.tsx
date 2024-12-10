@@ -32,7 +32,7 @@ const Step = ({
       <div className="flex w-full items-center">
         <div className="flex flex-1 flex-col border-right items-center">
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-            {fromAmount}
+            {+fromAmount.toPrecision(6)}
           </h3>
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {fromToken}
@@ -41,7 +41,7 @@ const Step = ({
         <MoveRight />
         <div className="flex flex-1 flex-col items-center">
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-            {toAmount}
+            {+toAmount.toPrecision(6)}
           </h3>
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
             {toToken}

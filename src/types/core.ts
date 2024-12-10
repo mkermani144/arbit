@@ -8,12 +8,12 @@ export interface Provider {
 }
 
 /**
- * To link all markets in a arbitrategy chain we use swap type:
+ * To link all markets in an arbit we use swap type:
  * - x2y: sell token X and buy token Y in this market
  * - y2x: sell token Y and buy token X in this market
  *
  * @example
- * For this chain:
+ * For this arbit:
  * --ETH/BTC->ETH/USDT->USDT/USDC->BTC/USDC--
  * We have these swaps:
  * --y2x->x2y->x2y->y2x
@@ -21,8 +21,8 @@ export interface Provider {
 export type SwapType = "x2y" | "y2x";
 
 /**
- * A link is a piece in the arbitrategy chain, containing provider, market id
- * (e.g. LP id) and its mapping type
+ * A link is a piece in the arbit, containing provider, market id (e.g. LP id)
+ * and its mapping type
  *
  * @example
  * const link: Link = {
@@ -46,17 +46,18 @@ export interface Link {
 }
 
 /**
- * An arbitrategy chain is a complete set of markets (possibly on different
+ * An arbit is a complete set of markets (possibly on different
  * providers) that we manipulate to earn profit
  */
-export type ArbitrategyChain = Link[];
+export type Arbit = Link[];
 /**
- * Arbitrategy indicates a set of chains that we are going to manipulate
+ * Arbitrategy indicates a set of arbits that we are going to compute their
+ * profit
  */
-export type Arbitrategy = ArbitrategyChain[];
+export type Arbitrategy = Arbit[];
 
 /**
- * A single trade on a link (within an arbitrategy chain)
+ * A single trade on a link (within an arbit)
  */
 export interface TradeLink extends Link {
   input: number;
@@ -64,7 +65,7 @@ export interface TradeLink extends Link {
 }
 
 /**
- * A sequence of trades executed within a single arbitrategy chain
+ * A sequence of trades executed within a single arbit
  * Each trade in the path contributes to the overall profit calculation
  */
 export type TradePath = TradeLink[];

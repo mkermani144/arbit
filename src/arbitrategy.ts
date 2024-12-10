@@ -22,7 +22,7 @@ const adaErgArbitrategy: Arbitrategy = [
       providerId: "splash",
       swapType: "y2x",
       marketId:
-        "ececc92aeaaac1f5b665f567b01baec8bc2771804b4c21716a87a4e3.53504c415348",
+        "04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb14.7273455247",
       x: {
         name: "ADA",
         coingeckoId: "cardano",
@@ -41,7 +41,7 @@ const adaErgArbitrategy: Arbitrategy = [
       providerId: "splash",
       swapType: "x2y",
       marketId:
-        "ececc92aeaaac1f5b665f567b01baec8bc2771804b4c21716a87a4e3.53504c415348",
+        "04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb14.7273455247",
       x: {
         name: "ADA",
         coingeckoId: "cardano",

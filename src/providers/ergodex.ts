@@ -1,19 +1,31 @@
 import { Provider } from "@/types/core";
-import { AmmPool, makeNativePools, Pools } from "@ergolabs/ergo-dex-sdk";
+import {
+  AmmPool,
+  makeNativePools,
+  makeTokenPools,
+  Pools,
+} from "@ergolabs/ergo-dex-sdk";
 import { AssetAmount, Explorer, RustModule } from "@ergolabs/ergo-sdk";
 
 await RustModule.load();
 
 class ErgoDex implements Provider {
-  private pools: Pools<AmmPool>;
+  private nativePools: Pools<AmmPool>;
+  private tokenPools: Pools<AmmPool>;
 
   constructor(url: string) {
-    this.pools = makeNativePools(new Explorer(url));
+    this.nativePools = makeNativePools(new Explorer(url));
+    this.tokenPools = makeTokenPools(new Explorer(url));
   }
 
   async x2y(marketId: string, amount: number) {
-    const pool = await this.pools.get(marketId);
-    const outputAmount = await pool?.outputAmount({
+    const pool = (
+      await Promise.all([
+        this.nativePools.get(marketId),
+        this.tokenPools.get(marketId),
+      ])
+    ).find(Boolean)!;
+    const outputAmount = await pool.outputAmount({
       amount,
       asset: pool.assetX,
     } as unknown as AssetAmount);
@@ -26,8 +38,13 @@ class ErgoDex implements Provider {
   }
 
   async y2x(marketId: string, amount: number) {
-    const pool = await this.pools.get(marketId);
-    const outputAmount = await pool?.outputAmount({
+    const pool = (
+      await Promise.all([
+        this.nativePools.get(marketId),
+        this.tokenPools.get(marketId),
+      ])
+    ).find(Boolean)!;
+    const outputAmount = await pool.outputAmount({
       amount,
       asset: pool.assetY,
     } as unknown as AssetAmount);

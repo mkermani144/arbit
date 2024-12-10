@@ -1,6 +1,4 @@
 import { Provider } from "@/types/core";
-import { AmmPool, makeNativePools, Pools } from "@ergolabs/ergo-dex-sdk";
-import { AssetAmount, Explorer, RustModule } from "@ergolabs/ergo-sdk";
 
 type Order = {
   price: string;

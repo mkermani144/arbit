@@ -1,6 +1,6 @@
 import {
   Arbitrategy,
-  ArbitrategyChain,
+  Arbit,
   ArbitResult,
   Link,
   Profit,
@@ -38,29 +38,28 @@ export class ArbitCore {
   };
 
   /**
-   * Execute the arbitrategy chain with the specified fund and compute the
-   * results
-   * The arbitrategy is profitable if the primary asset is increased after
-   * completing the trades
+   * Execute the arbit with the specified fund and compute the results
+   * The arbit is profitable if the primary asset is increased after completing
+   * the trades
    *
-   * @param arbitrategyChain
+   * @param arbit
    * @param fund
-   * @returns the arbitrategy result including trading path and profit
+   * @returns the arbit result including trading path and profit
    */
-  computeArbitrategyProfit = async (
-    arbitrategyChain: ArbitrategyChain,
+  computeArbitProfit = async (
+    arbit: Arbit,
     fund: number
   ): Promise<ArbitResult> => {
     // Find the primary asset
-    const startingLink = arbitrategyChain[0];
+    const startingLink = arbit[0];
     const primaryAsset =
       startingLink.swapType == "x2y" ? startingLink.x : startingLink.y;
     // Calculate starting amount based on the specified fund
     const startingAssetAmount = await usd2asset(primaryAsset, fund);
-    // Create the trade path and trade assets based on arbitrategy chain
+    // Create the trade path and trade assets based on arbit
     let assetAmount = startingAssetAmount;
     const finalTradePath: TradePath = [];
-    for (const link of arbitrategyChain) {
+    for (const link of arbit) {
       const tradeLink = await this.trade(link, assetAmount);
       assetAmount = tradeLink.output;
       finalTradePath.push(tradeLink);
@@ -96,19 +95,16 @@ export class ArbitCore {
   };
 
   /**
-   * Checks all arbitrategy chain opportunities with different funds
+   * Checks all arbits with different funds
    * @returns the final result of the arbitrategy
    */
   start = async () => {
     const arbitFinalResult: ArbitResult[] = [];
-    for (const arbitrategyChain of this.arbitrategy) {
-      // Check each arbitrategy chain profit with different funds
+    for (const arbit of this.arbitrategy) {
+      // Check each arbit profit with different funds
       let bestArbitResult: ArbitResult | undefined;
       for (const fundInUsd of this.fundRangeInUsd) {
-        const result = await this.computeArbitrategyProfit(
-          arbitrategyChain,
-          fundInUsd
-        );
+        const result = await this.computeArbitProfit(arbit, fundInUsd);
         if (!bestArbitResult || bestArbitResult.profit.usd < result.profit.usd)
           bestArbitResult = result;
       }
