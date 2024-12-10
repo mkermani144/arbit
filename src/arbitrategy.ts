@@ -20,18 +20,18 @@ const adaErgArbitrategy: Arbitrategy = [
     },
     {
       providerId: "splash",
-      swapType: "y2x",
+      swapType: "x2y",
       marketId:
         "04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb14.7273455247",
       x: {
-        name: "ADA",
-        coingeckoId: "cardano",
-        decimals: 6,
-      },
-      y: {
         name: "rsERG",
         coingeckoId: "ergo",
         decimals: 9,
+      },
+      y: {
+        name: "ADA",
+        coingeckoId: "cardano",
+        decimals: 6,
       },
     },
   ],
@@ -39,18 +39,18 @@ const adaErgArbitrategy: Arbitrategy = [
   [
     {
       providerId: "splash",
-      swapType: "x2y",
+      swapType: "y2x",
       marketId:
         "04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb14.7273455247",
       x: {
-        name: "ADA",
-        coingeckoId: "cardano",
-        decimals: 6,
-      },
-      y: {
         name: "rsERG",
         coingeckoId: "ergo",
         decimals: 9,
+      },
+      y: {
+        name: "ADA",
+        coingeckoId: "cardano",
+        decimals: 6,
       },
     },
     {
@@ -92,36 +92,36 @@ const adaRsnArbitrategy: Arbitrategy = [
     },
     {
       providerId: "splash",
-      swapType: "y2x",
+      swapType: "x2y",
       marketId:
         "04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb14.727352534e",
       x: {
-        name: "ADA",
-        coingeckoId: "cardano",
-        decimals: 6,
-      },
-      y: {
         name: "rsRSN",
         coingeckoId: "rosen-bridge",
         decimals: 3,
+      },
+      y: {
+        name: "ADA",
+        coingeckoId: "cardano",
+        decimals: 6,
       },
     },
   ],
   [
     {
       providerId: "splash",
-      swapType: "x2y",
+      swapType: "y2x",
       marketId:
         "04b95368393c821f180deee8229fbd941baaf9bd748ebcdbf7adbb14.727352534e",
       x: {
-        name: "ADA",
-        coingeckoId: "cardano",
-        decimals: 6,
-      },
-      y: {
         name: "rsRSN",
         coingeckoId: "rosen-bridge",
         decimals: 3,
+      },
+      y: {
+        name: "ADA",
+        coingeckoId: "cardano",
+        decimals: 6,
       },
     },
     {

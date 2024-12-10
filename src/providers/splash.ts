@@ -48,17 +48,17 @@ class Splash implements Provider {
   async x2y(marketId: string, amount: number) {
     const orderBook = await this.getOrderBook(marketId);
 
-    const ask = orderBook.asks[0].price;
+    const bid = orderBook.bids[0].price;
 
-    return amount / Number(ask);
+    return amount * Number(bid);
   }
 
   async y2x(marketId: string, amount: number) {
     const orderBook = await this.getOrderBook(marketId);
 
-    const bid = orderBook.bids[0].price;
+    const ask = orderBook.asks[0].price;
 
-    return amount * Number(bid);
+    return amount / Number(ask);
   }
 }
 
