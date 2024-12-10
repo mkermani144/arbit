@@ -26,8 +26,8 @@ export default async function Home() {
   const arbitResults = new ArbitCore(
     simpleArbitrategy,
     new Map<string, Provider>([
-      ["ergodex", new ErgoDex("https://api.ergoplatform.com")],
-      ["splash", new Splash("https://api5.splash.trade")],
+      ["ergodex", new ErgoDex(process.env.ERGO_EXPLORER_API_URL!)],
+      ["splash", new Splash(process.env.SPLASH_API_URL!)],
     ])
   );
 
