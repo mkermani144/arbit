@@ -16,7 +16,7 @@ const providers: Record<string, { name: string; link: string }> = {
   },
   splash: {
     name: 'Splash',
-    link: 'https://splash.trade',
+    link: 'https://app.splash.trade',
   },
 };
 
