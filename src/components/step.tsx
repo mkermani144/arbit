@@ -26,7 +26,7 @@ const Step = ({
   providerName,
   providerLink,
 }: StepProps) => (
-  <Card className="w-[350px]">
+  <Card className="w-[300px] lg:w-[350px]">
     <CardHeader />
     <CardContent>
       <div className="flex w-full items-center">

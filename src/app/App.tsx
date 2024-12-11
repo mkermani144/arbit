@@ -50,11 +50,11 @@ const App = async () => {
           percent={topProfitableResult.profit.percent}
         />
       </div>
-      <p className="text-sm text-muted-foreground mt-4">
+      <p className="text-sm text-muted-foreground mt-4 text-center">
         Top profit right now. All fees are considered based on a best guess.
         Take care of slippage.
       </p>
-      <div className="flex mt-8 gap-4">
+      <div className="flex flex-col lg:flex-row mt-8 gap-4">
         {topProfitableResult.tradePath.map((tradeLink) => {
           const fromToken =
             tradeLink.swapType === 'x2y' ? tradeLink.x : tradeLink.y;
