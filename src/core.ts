@@ -16,7 +16,9 @@ export class ArbitCore {
     private providerMap: Map<string, Provider>,
   ) {}
 
-  private fundRangeInUsd = [50, 75, 100, 150, 200, 300, 500];
+  private fundRangeInUsd = [
+    10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200,
+  ];
 
   /**
    * Trade assets on the specified link
