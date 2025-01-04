@@ -30,6 +30,7 @@ const App = async () => {
   );
 
   const allArbitResults = await arbitResults.start();
+  console.warn(allArbitResults);
   const topProfitableResult = allArbitResults.reduce(
     (topCandidate, arbitResult) =>
       arbitResult.profit.usd > topCandidate.profit.usd
@@ -40,7 +41,7 @@ const App = async () => {
      * profitable
      * https://github.com/ConnecMent/arbit/issues/31
      */
-    { profit: { usd: 0, percent: 0 }, tradePath: [] },
+    { profit: { usd: 0, percent: 0 }, tradePath: [], optimalIndex: 0 },
   );
   return (
     <>
@@ -65,9 +66,15 @@ const App = async () => {
             <Step
               key={tradeLink.marketId}
               fromToken={fromToken.name}
-              fromAmount={tradeLink.input / 10 ** fromToken.decimals}
+              fromAmount={
+                tradeLink.input[topProfitableResult.optimalIndex] /
+                10 ** fromToken.decimals
+              }
               toToken={toToken.name}
-              toAmount={tradeLink.output / 10 ** toToken.decimals}
+              toAmount={
+                tradeLink.output[topProfitableResult.optimalIndex] /
+                10 ** toToken.decimals
+              }
               providerName={providers[tradeLink.providerId].name}
               providerLink={providers[tradeLink.providerId].link}
             />

@@ -45,22 +45,28 @@ class Splash implements Provider {
     return data as OrderBookResponse;
   }
 
-  async x2y(marketId: string, amount: number) {
+  async x2y(marketId: string, amounts: number[]) {
     const orderBook = await this.getOrderBook(marketId);
+    return Promise.all(
+      amounts.map(async (amount) => {
+        const bid = orderBook.bids.find((bid) => +bid.poolsLiquidity >= amount);
 
-    const bid = orderBook.bids.find((bid) => +bid.poolsLiquidity >= amount);
-
-    return amount * Number(bid?.price ?? 0);
+        return amount * Number(bid?.price ?? 0);
+      }),
+    );
   }
 
-  async y2x(marketId: string, amount: number) {
+  async y2x(marketId: string, amounts: number[]) {
     const orderBook = await this.getOrderBook(marketId);
+    return Promise.all(
+      amounts.map(async (amount) => {
+        const ask = orderBook.asks.find(
+          (ask) => +ask.poolsLiquidity * +ask.price >= amount,
+        );
 
-    const ask = orderBook.asks.find(
-      (ask) => +ask.poolsLiquidity * +ask.price >= amount,
+        return amount / Number(ask?.price ?? Infinity);
+      }),
     );
-
-    return amount / Number(ask?.price ?? Infinity);
   }
 }
 
