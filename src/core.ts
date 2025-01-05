@@ -28,14 +28,14 @@ export class ArbitCore {
    */
   trade = async (link: Link, tradeInputs: number[]): Promise<TradeLink> => {
     const provider = this.providerMap.get(link.providerId)!;
-    const tradeOutput = await provider[link.swapType](
+    const tradeOutputs = await provider[link.swapType](
       link.marketId,
       tradeInputs,
     );
     return {
       ...link,
       input: tradeInputs,
-      output: tradeOutput,
+      output: tradeOutputs,
     };
   };
 
