@@ -3,8 +3,8 @@
  * a provider and its LPs are the markets)
  */
 export interface Provider {
-  x2y(marketId: string, amount: number): Promise<number>;
-  y2x(marketId: string, amount: number): Promise<number>;
+  x2y(marketId: string, amounts: number[]): Promise<number[]>;
+  y2x(marketId: string, amounts: number[]): Promise<number[]>;
 }
 
 /**
@@ -60,8 +60,8 @@ export type Arbitrategy = Arbit[];
  * A single trade on a link (within an arbit)
  */
 export interface TradeLink extends Link {
-  input: number;
-  output: number;
+  input: number[];
+  output: number[];
 }
 
 /**
@@ -82,4 +82,5 @@ export interface Profit {
 export interface ArbitResult {
   tradePath: TradePath;
   profit: Profit;
+  optimalIndex: number;
 }

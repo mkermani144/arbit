@@ -16,26 +16,26 @@ export class ArbitCore {
     private providerMap: Map<string, Provider>,
   ) {}
 
-  private fundRangeInUsd = [
-    10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200,
+  private fundsInUsd = [
+    10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 300, 400, 500,
   ];
 
   /**
    * Trade assets on the specified link
    * @param link
-   * @param tradeInput asset amount to trade
+   * @param tradeInputs asset amounts to trade
    * @returns the trade link
    */
-  trade = async (link: Link, tradeInput: number): Promise<TradeLink> => {
+  trade = async (link: Link, tradeInputs: number[]): Promise<TradeLink> => {
     const provider = this.providerMap.get(link.providerId)!;
-    const tradeOutput = await provider[link.swapType](
+    const tradeOutputs = await provider[link.swapType](
       link.marketId,
-      tradeInput,
+      tradeInputs,
     );
     return {
       ...link,
-      input: tradeInput,
-      output: tradeOutput,
+      input: tradeInputs,
+      output: tradeOutputs,
     };
   };
 
@@ -48,28 +48,27 @@ export class ArbitCore {
    * @param fund
    * @returns the arbit result including trading path and profit
    */
-  computeArbitProfit = async (
-    arbit: Arbit,
-    fund: number,
-  ): Promise<ArbitResult> => {
+  computeArbitProfit = async (arbit: Arbit): Promise<ArbitResult> => {
     // Find the primary asset
     const startingLink = arbit[0];
     const primaryAsset =
       startingLink.swapType == 'x2y' ? startingLink.x : startingLink.y;
     // Calculate starting amount based on the specified fund
-    const startingAssetAmount = await usd2asset(primaryAsset, fund);
+    const startingAssetAmounts = await usd2asset(primaryAsset, this.fundsInUsd);
     // Create the trade path and trade assets based on arbit
-    let assetAmount = startingAssetAmount;
+    let assetAmounts = startingAssetAmounts;
     const finalTradePath: TradePath = [];
     for (const link of arbit) {
-      const tradeLink = await this.trade(link, assetAmount);
-      assetAmount = tradeLink.output;
+      const tradeLink = await this.trade(link, assetAmounts);
+      assetAmounts = tradeLink.output;
       finalTradePath.push(tradeLink);
     }
     // Compute profit
-    const profitUsd = await asset2usd(
+    const profitUsds = await asset2usd(
       primaryAsset,
-      assetAmount - startingAssetAmount,
+      assetAmounts.map(
+        (assetAmount, index) => assetAmount - startingAssetAmounts[index],
+      ),
     );
     /**
      * FIXME: This method for calculating fees is imprecise and just a best
@@ -85,14 +84,24 @@ export class ArbitCore {
      *
      * In total: 0.35% + 1.3 ADA ~= 0.35% + $2.5 (conservative)
      */
-    const netProfitUsd = profitUsd - fund * 0.0035 - 2.5;
+    const netProfitUsds = profitUsds.map(
+      (profitUsd, index) => profitUsd - this.fundsInUsd[index] * 0.0035 - 2.5,
+    );
+    const maxNetProfitUsd = netProfitUsds.reduce((max, cur) =>
+      Math.max(max, cur),
+    );
+    const optimalIndex = netProfitUsds.findIndex(
+      (netProfitUsd) => maxNetProfitUsd === netProfitUsd,
+    )!;
+    const optimalFund = this.fundsInUsd[optimalIndex];
     const profit: Profit = {
-      usd: netProfitUsd,
-      percent: (netProfitUsd / fund) * 100,
+      usd: maxNetProfitUsd,
+      percent: (maxNetProfitUsd / optimalFund) * 100,
     };
     return {
       tradePath: finalTradePath,
       profit: profit,
+      optimalIndex,
     };
   };
 
@@ -101,17 +110,9 @@ export class ArbitCore {
    * @returns the final result of the arbitrategy
    */
   start = async () => {
-    const arbitFinalResult: ArbitResult[] = [];
-    for (const arbit of this.arbitrategy) {
-      // Check each arbit profit with different funds
-      let bestArbitResult: ArbitResult | undefined;
-      for (const fundInUsd of this.fundRangeInUsd) {
-        const result = await this.computeArbitProfit(arbit, fundInUsd);
-        if (!bestArbitResult || bestArbitResult.profit.usd < result.profit.usd)
-          bestArbitResult = result;
-      }
-      arbitFinalResult.push(bestArbitResult!);
-    }
-    return arbitFinalResult;
+    const arbitResults = await Promise.all(
+      this.arbitrategy.map(this.computeArbitProfit),
+    );
+    return arbitResults;
   };
 }

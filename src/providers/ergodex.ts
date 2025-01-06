@@ -18,42 +18,50 @@ class ErgoDex implements Provider {
     this.tokenPools = makeTokenPools(new Explorer(url));
   }
 
-  async x2y(marketId: string, amount: number) {
+  async x2y(marketId: string, amounts: number[]) {
     const pool = (
       await Promise.all([
         this.nativePools.get(marketId),
         this.tokenPools.get(marketId),
       ])
     ).find(Boolean)!;
-    const outputAmount = await pool.outputAmount({
-      amount,
-      asset: pool.assetX,
-    } as unknown as AssetAmount);
+    return Promise.all(
+      amounts.map(async (amount) => {
+        const outputAmount = await pool.outputAmount({
+          amount,
+          asset: pool.assetX,
+        } as unknown as AssetAmount);
 
-    if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
-      throw new Error('Output amount or decimals is unexpected');
-    }
+        if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
+          throw new Error('Output amount or decimals is unexpected');
+        }
 
-    return Number(outputAmount.amount);
+        return Number(outputAmount.amount);
+      }),
+    );
   }
 
-  async y2x(marketId: string, amount: number) {
+  async y2x(marketId: string, amounts: number[]) {
     const pool = (
       await Promise.all([
         this.nativePools.get(marketId),
         this.tokenPools.get(marketId),
       ])
     ).find(Boolean)!;
-    const outputAmount = await pool.outputAmount({
-      amount,
-      asset: pool.assetY,
-    } as unknown as AssetAmount);
+    return Promise.all(
+      amounts.map(async (amount) => {
+        const outputAmount = await pool.outputAmount({
+          amount,
+          asset: pool.assetY,
+        } as unknown as AssetAmount);
 
-    if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
-      throw new Error('Output amount or decimals is unexpected');
-    }
+        if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
+          throw new Error('Output amount or decimals is unexpected');
+        }
 
-    return Number(outputAmount.amount);
+        return Number(outputAmount.amount);
+      }),
+    );
   }
 }
 
