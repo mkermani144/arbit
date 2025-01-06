@@ -30,7 +30,6 @@ const App = async () => {
   );
 
   const allArbitResults = await arbitResults.start();
-  console.warn(allArbitResults);
   const topProfitableResult = allArbitResults.reduce(
     (topCandidate, arbitResult) =>
       arbitResult.profit.usd > topCandidate.profit.usd
