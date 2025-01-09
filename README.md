@@ -20,7 +20,7 @@ An "Arbit" is a set of swaps resulting in profit. Imagine selling 100 X on FooSw
 
 ## How It Works
 
-We have a predefined set of Arbits—currently ERG<->ADA and RSN<->ADA, using Ergo Dex and Splash. We consider Arbits in both directions and calculate their profits.
+We have a predefined set of Arbits—currently ERG<->ADA and RSN<->ADA, using Ergo Dex, Splash, and Minswap. We consider Arbits in both directions and calculate their profits.
 
 We calculate profit for fixed USD values ($50 and $100). We don't optimize token amounts for maximum profit; that would complicate things.
 
@@ -38,6 +38,7 @@ We repeat this for $100 (and other fixed amounts), then do the same in the oppos
 
    - `SPLASH_API_URL`: Splash API (discovered via Chrome's network tab, as their docs are empty)
    - `ERGO_EXPLORER_API_URL`: Ergo Explorer API
+   - `BLOCKFROST_PROJECT_ID`: Blockfrost project id (for Minswap)
 
 2. Run the development build:
    ```
