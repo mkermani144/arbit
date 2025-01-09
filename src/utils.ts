@@ -27,6 +27,6 @@ export const usd2asset = async (asset: AssetInfo, usdAmounts: number[]) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
   return usdAmounts.map(
-    (amount) => (amount * 10 ** asset.decimals) / assetValue,
+    (amount) => +((amount * 10 ** asset.decimals) / assetValue).toFixed(0),
   );
 };

@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['@patternglobal/ergo-sdk'],
+  serverExternalPackages: ['@patternglobal/ergo-sdk', '@minswap/sdk'],
   webpack: function (config) {
     config.experiments = {
       asyncWebAssembly: true,

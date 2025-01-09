@@ -8,6 +8,7 @@ import HeroPrice from '@/components/hero-price';
 import Step from '@/components/step';
 
 import { Provider } from '@/types/core';
+import Minswap from '@/providers/minswap';
 
 const providers: Record<string, { name: string; link: string }> = {
   ergodex: {
@@ -18,6 +19,10 @@ const providers: Record<string, { name: string; link: string }> = {
     name: 'Splash',
     link: 'https://app.splash.trade',
   },
+  minswap: {
+    name: 'Minswap',
+    link: 'https://app.minswap.org/swap',
+  },
 };
 
 const App = async () => {
@@ -26,6 +31,7 @@ const App = async () => {
     new Map<string, Provider>([
       ['ergodex', new ErgoDex(process.env.ERGO_EXPLORER_API_URL!)],
       ['splash', new Splash(process.env.SPLASH_API_URL!)],
+      ['minswap', new Minswap()],
     ]),
   );
 

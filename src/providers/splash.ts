@@ -51,7 +51,7 @@ class Splash implements Provider {
       amounts.map(async (amount) => {
         const bid = orderBook.bids.find((bid) => +bid.poolsLiquidity >= amount);
 
-        return amount * Number(bid?.price ?? 0);
+        return +(amount * Number(bid?.price ?? 0)).toFixed(0);
       }),
     );
   }
@@ -64,7 +64,7 @@ class Splash implements Provider {
           (ask) => +ask.poolsLiquidity * +ask.price >= amount,
         );
 
-        return amount / Number(ask?.price ?? Infinity);
+        return +(amount / Number(ask?.price ?? Infinity)).toFixed(0);
       }),
     );
   }

@@ -79,14 +79,41 @@ export class ArbitCore {
      * - Ergo Dex: The LP fee is considered in the SDK. The execution and
      * network fees can be omitted due to being quite small, and service fee is
      * 0.3%.
-     * - Splash: Order book matching fee is 0.1 ADA + 0.05%. Network fee is at
-     * most 0.2 ADA, and execution fee is around 1 ADA.
+     * - Splash: Order book matching fee is calculated in the order book.
+     * Network fee is at most 0.2 ADA, and execution fee is around 1 ADA.
+     * - Minswap: Batcher fee is 2 ADA, network fee is 0.2 ADA and other fees
+     * are considered in the SDK.
      *
-     * In total: 0.35% + 1.3 ADA ~= 0.35% + $2.5 (conservative)
+     * In short:
+     * Ergo Dex: 0.3%
+     * Splash: 1.2 ADA
+     * Minswap: 2.2 ADA
      */
-    const netProfitUsds = profitUsds.map(
-      (profitUsd, index) => profitUsd - this.fundsInUsd[index] * 0.0035 - 2.5,
+    const [adaPrice] = await asset2usd(
+      {
+        coingeckoId: 'cardano',
+        decimals: 6,
+        name: 'ada',
+      },
+      [1000000],
     );
+    const netProfitUsds = profitUsds.map((profitUsd, index) => {
+      const includesErgoDexLink = arbit.some(
+        (link) => link.providerId === 'ergodex',
+      );
+      const includesSplashLink = arbit.some(
+        (link) => link.providerId === 'splash',
+      );
+      const includesMinswapLink = arbit.some(
+        (link) => link.providerId === 'minswap',
+      );
+      const feesToConsider =
+        (+includesErgoDexLink && 0.003 * this.fundsInUsd[index]) +
+        (+includesSplashLink && 1.2 * adaPrice) +
+        (+includesMinswapLink && 2.2 * adaPrice);
+
+      return profitUsd - feesToConsider;
+    });
     const maxNetProfitUsd = netProfitUsds.reduce((max, cur) =>
       Math.max(max, cur),
     );
