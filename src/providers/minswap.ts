@@ -25,13 +25,13 @@ class Minswap implements Provider {
   async x2y(marketId: string, amounts: number[]) {
     const [v1LPId, v2PolicyId, v2TokenName] = marketId.split('-');
 
-    const poolsV1 = await this.adapter.getV1PoolById({
-      id: v1LPId,
-    });
-    const poolsV2 = await this.adapter.getV2PoolByLp({
-      policyId: v2PolicyId,
-      tokenName: v2TokenName,
-    });
+    const [poolsV1, poolsV2] = await Promise.all([
+      this.adapter.getV1PoolById({ id: v1LPId }),
+      this.adapter.getV2PoolByLp({
+        policyId: v2PolicyId,
+        tokenName: v2TokenName,
+      }),
+    ]);
 
     return Promise.all(
       amounts.map(async (amount) => {
@@ -62,13 +62,13 @@ class Minswap implements Provider {
   async y2x(marketId: string, amounts: number[]) {
     const [v1LPId, v2PolicyId, v2TokenName] = marketId.split('-');
 
-    const poolsV1 = await this.adapter.getV1PoolById({
-      id: v1LPId,
-    });
-    const poolsV2 = await this.adapter.getV2PoolByLp({
-      policyId: v2PolicyId,
-      tokenName: v2TokenName,
-    });
+    const [poolsV1, poolsV2] = await Promise.all([
+      this.adapter.getV1PoolById({ id: v1LPId }),
+      this.adapter.getV2PoolByLp({
+        policyId: v2PolicyId,
+        tokenName: v2TokenName,
+      }),
+    ]);
 
     return Promise.all(
       amounts.map(async (amount) => {
