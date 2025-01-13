@@ -16,9 +16,14 @@ export class ArbitCore {
     private providerMap: Map<string, Provider>,
   ) {}
 
-  private fundsInUsd = [
-    10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 300, 400, 500,
-  ];
+  /**
+   * All numbers in the range 20-500, with a distance of 0.1 (e.g. 20-20.1-...)
+   */
+  private fundsInUsd = Array.from({ length: 481 }).flatMap((_, index) =>
+    Array.from({ length: 10 }).map(
+      (_, innerIndex) => index + 20 + 0.1 * innerIndex,
+    ),
+  );
 
   /**
    * Trade assets on the specified link
