@@ -119,16 +119,18 @@ export class ArbitCore {
 
       return profitUsd - feesToConsider;
     });
-    const maxNetProfitUsd = netProfitUsds.reduce((max, cur) =>
+    const netProfitPercents = netProfitUsds.map(
+      (profitUsd, index) => (profitUsd / this.fundsInUsd[index]) * 100,
+    );
+    const maxNetProfitPercent = netProfitPercents.reduce((max, cur) =>
       Math.max(max, cur),
     );
-    const optimalIndex = netProfitUsds.findIndex(
-      (netProfitUsd) => maxNetProfitUsd === netProfitUsd,
+    const optimalIndex = netProfitPercents.findIndex(
+      (netProfitPercent) => maxNetProfitPercent === netProfitPercent,
     )!;
-    const optimalFund = this.fundsInUsd[optimalIndex];
     const profit: Profit = {
-      usd: maxNetProfitUsd,
-      percent: (maxNetProfitUsd / optimalFund) * 100,
+      usd: netProfitUsds[optimalIndex],
+      percent: maxNetProfitPercent,
     };
     return {
       tradePath: finalTradePath,
