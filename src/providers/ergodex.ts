@@ -1,68 +1,54 @@
 import { Provider } from '@/types/core';
-import {
-  AmmPool,
-  makeNativePools,
-  makeTokenPools,
-  Pools,
-} from '@patternglobal/ergo-dex-sdk';
+import { timedCache } from '@/utils';
+import { makeNativePools, makeTokenPools } from '@patternglobal/ergo-dex-sdk';
 import { AssetAmount, Explorer, RustModule } from '@patternglobal/ergo-sdk';
 
 await RustModule.load(true);
 
-class ErgoDex implements Provider {
-  private nativePools: Pools<AmmPool>;
-  private tokenPools: Pools<AmmPool>;
+const explorer = new Explorer(process.env.ERGO_EXPLORER_API_URL!);
+const getPool = timedCache(async (marketId: string) => {
+  const nativePools = makeNativePools(explorer);
+  const tokenPools = makeTokenPools(explorer);
 
-  constructor(url: string) {
-    this.nativePools = makeNativePools(new Explorer(url));
-    this.tokenPools = makeTokenPools(new Explorer(url));
-  }
+  const pool = (
+    await Promise.all([nativePools.get(marketId), tokenPools.get(marketId)])
+  ).find(Boolean)!;
 
+  return pool;
+});
+
+const ErgoDex: Provider = {
   async x2y(marketId: string, amounts: number[]) {
-    const pool = (
-      await Promise.all([
-        this.nativePools.get(marketId),
-        this.tokenPools.get(marketId),
-      ])
-    ).find(Boolean)!;
-    return Promise.all(
-      amounts.map(async (amount) => {
-        const outputAmount = await pool.outputAmount({
-          amount,
-          asset: pool.assetX,
-        } as unknown as AssetAmount);
+    const pool = await getPool(marketId);
+    return amounts.map((amount) => {
+      const outputAmount = pool.outputAmount({
+        amount,
+        asset: pool.assetX,
+      } as unknown as AssetAmount);
 
-        if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
-          throw new Error('Output amount or decimals is unexpected');
-        }
+      if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
+        throw new Error('Output amount or decimals is unexpected');
+      }
 
-        return Number(outputAmount.amount);
-      }),
-    );
-  }
+      return Number(outputAmount.amount);
+    });
+  },
 
   async y2x(marketId: string, amounts: number[]) {
-    const pool = (
-      await Promise.all([
-        this.nativePools.get(marketId),
-        this.tokenPools.get(marketId),
-      ])
-    ).find(Boolean)!;
-    return Promise.all(
-      amounts.map(async (amount) => {
-        const outputAmount = await pool.outputAmount({
-          amount,
-          asset: pool.assetY,
-        } as unknown as AssetAmount);
+    const pool = await getPool(marketId);
+    return amounts.map((amount) => {
+      const outputAmount = pool.outputAmount({
+        amount,
+        asset: pool.assetY,
+      } as unknown as AssetAmount);
 
-        if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
-          throw new Error('Output amount or decimals is unexpected');
-        }
+      if (!outputAmount?.amount || outputAmount.asset.decimals == null) {
+        throw new Error('Output amount or decimals is unexpected');
+      }
 
-        return Number(outputAmount.amount);
-      }),
-    );
-  }
-}
+      return Number(outputAmount.amount);
+    });
+  },
+};
 
 export default ErgoDex;

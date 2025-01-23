@@ -16,14 +16,13 @@ export class ArbitCore {
     private providerMap: Map<string, Provider>,
   ) {}
 
-  /**
-   * All numbers in the range 20-500, with a distance of 0.1 (e.g. 20-20.1-...)
-   */
-  private fundsInUsd = Array.from({ length: 481 }).flatMap((_, index) =>
-    Array.from({ length: 10 }).map(
-      (_, innerIndex) => index + 20 + 0.1 * innerIndex,
-    ),
-  );
+  private RANGE_START = 20;
+  private RANGE_END = 500;
+
+  range = (start: number, end: number) =>
+    Array.from({ length: 3 }).flatMap(
+      (_, index) => start + ((end - start) / 2) * index,
+    );
 
   /**
    * Trade assets on the specified link
@@ -53,13 +52,16 @@ export class ArbitCore {
    * @param fund
    * @returns the arbit result including trading path and profit
    */
-  computeArbitProfit = async (arbit: Arbit): Promise<ArbitResult> => {
+  computeArbitProfit = async (
+    arbit: Arbit,
+    funds: number[],
+  ): Promise<ArbitResult> => {
     // Find the primary asset
     const startingLink = arbit[0];
     const primaryAsset =
       startingLink.swapType == 'x2y' ? startingLink.x : startingLink.y;
     // Calculate starting amount based on the specified fund
-    const startingAssetAmounts = await usd2asset(primaryAsset, this.fundsInUsd);
+    const startingAssetAmounts = await usd2asset(primaryAsset, funds);
     // Create the trade path and trade assets based on arbit
     let assetAmounts = startingAssetAmounts;
     const finalTradePath: TradePath = [];
@@ -113,14 +115,14 @@ export class ArbitCore {
         (link) => link.providerId === 'minswap',
       );
       const feesToConsider =
-        (+includesErgoDexLink && 0.003 * this.fundsInUsd[index]) +
+        (+includesErgoDexLink && 0.003 * funds[index]) +
         (+includesSplashLink && 1.2 * adaPrice) +
         (+includesMinswapLink && 2.2 * adaPrice);
 
       return profitUsd - feesToConsider;
     });
     const netProfitPercents = netProfitUsds.map(
-      (profitUsd, index) => (profitUsd / this.fundsInUsd[index]) * 100,
+      (profitUsd, index) => (profitUsd / funds[index]) * 100,
     );
     const maxNetProfitPercent = netProfitPercents.reduce((max, cur) =>
       Math.max(max, cur),
@@ -128,6 +130,19 @@ export class ArbitCore {
     const optimalIndex = netProfitPercents.findIndex(
       (netProfitPercent) => maxNetProfitPercent === netProfitPercent,
     )!;
+    const currentDiff = funds[1] - funds[0];
+    if (currentDiff > 0.1) {
+      return this.computeArbitProfit(
+        arbit,
+        this.range(
+          Math.max(funds[optimalIndex] - currentDiff / 2, funds[0]),
+          Math.min(
+            funds[optimalIndex] + currentDiff / 2,
+            funds[funds.length - 1],
+          ),
+        ),
+      );
+    }
     const profit: Profit = {
       usd: netProfitUsds[optimalIndex],
       percent: maxNetProfitPercent,
@@ -145,7 +160,12 @@ export class ArbitCore {
    */
   start = async () => {
     const arbitResults = await Promise.all(
-      this.arbitrategy.map(this.computeArbitProfit),
+      this.arbitrategy.map((arbit) =>
+        this.computeArbitProfit(
+          arbit,
+          this.range(this.RANGE_START, this.RANGE_END),
+        ),
+      ),
     );
     return arbitResults;
   };
