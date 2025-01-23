@@ -1,4 +1,5 @@
 import { Provider } from '@/types/core';
+import { timedCache } from '@/utils';
 
 type Order = {
   price: string;
@@ -24,29 +25,23 @@ type OrderBookResponse = {
   ammTotalLiquidityQuote: string;
 };
 
-class Splash implements Provider {
-  private baseUrl: string;
-
-  constructor(url: string) {
-    this.baseUrl = url;
-  }
-
-  async getOrderBook(marketId: string): Promise<OrderBookResponse> {
-    const response = await fetch(
-      `${this.baseUrl}/platform-api/v1/trading-view/order-book?base=${marketId}&quote=.`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+const getOrderBook = timedCache(async (marketId: string) => {
+  const response = await fetch(
+    `${process.env.SPLASH_API_URL!}/platform-api/v1/trading-view/order-book?base=${marketId}&quote=.`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
-    const data = await response.json();
-    return data as OrderBookResponse;
-  }
+    },
+  );
+  const data = await response.json();
+  return data as OrderBookResponse;
+});
 
+const Splash: Provider = {
   async x2y(marketId: string, amounts: number[]) {
-    const orderBook = await this.getOrderBook(marketId);
+    const orderBook = await getOrderBook(marketId);
     return Promise.all(
       amounts.map(async (amount) => {
         const bid = orderBook.bids.find((bid) => +bid.poolsLiquidity >= amount);
@@ -54,10 +49,10 @@ class Splash implements Provider {
         return +(amount * Number(bid?.price ?? 0)).toFixed(0);
       }),
     );
-  }
+  },
 
   async y2x(marketId: string, amounts: number[]) {
-    const orderBook = await this.getOrderBook(marketId);
+    const orderBook = await getOrderBook(marketId);
     return Promise.all(
       amounts.map(async (amount) => {
         const ask = orderBook.asks.find(
@@ -67,7 +62,7 @@ class Splash implements Provider {
         return +(amount / Number(ask?.price ?? Infinity)).toFixed(0);
       }),
     );
-  }
-}
+  },
+};
 
 export default Splash;

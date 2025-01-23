@@ -29,9 +29,9 @@ const App = async () => {
   const arbitResults = new ArbitCore(
     simpleArbitrategy,
     new Map<string, Provider>([
-      ['ergodex', new ErgoDex(process.env.ERGO_EXPLORER_API_URL!)],
-      ['splash', new Splash(process.env.SPLASH_API_URL!)],
-      ['minswap', new Minswap()],
+      ['ergodex', ErgoDex],
+      ['splash', Splash],
+      ['minswap', Minswap],
     ]),
   );
 

@@ -30,3 +30,26 @@ export const usd2asset = async (asset: AssetInfo, usdAmounts: number[]) => {
     (amount) => +((amount * 10 ** asset.decimals) / assetValue).toFixed(0),
   );
 };
+
+export const timedCache = <T>(
+  fn: (key: string, ...args: unknown[]) => Promise<T>,
+  ttlMs = 10000,
+) => {
+  const cache = new Map<string, { pool: T; ttl: EpochTimeStamp }>();
+
+  return async (key: string, ...args: unknown[]) => {
+    const cacheHit = cache.get(key);
+    if (cacheHit && cacheHit.ttl > Date.now()) {
+      return cacheHit?.pool;
+    }
+
+    const result = await fn(key, ...args);
+
+    cache.set(key, {
+      ttl: Date.now() + ttlMs,
+      pool: result,
+    });
+
+    return result;
+  };
+};
