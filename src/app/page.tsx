@@ -7,6 +7,8 @@ import GithubRepo from '@/components/github-repo';
 import { ModeToggle } from '@/components/mode-toggle';
 import { Badge } from '@/components/ui/badge';
 
+export const experimental_ppr = true;
+
 export default async function Home() {
   return (
     <div className="flex h-screen w-full items-center justify-center flex-col px-4">
@@ -30,5 +32,3 @@ export default async function Home() {
     </div>
   );
 }
-
-export const dynamic = 'force-dynamic';
