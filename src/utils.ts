@@ -35,21 +35,21 @@ export const timedCache = <T>(
   fn: (key: string, ...args: unknown[]) => Promise<T>,
   ttlMs = 10000,
 ) => {
-  const cache = new Map<string, { pool: T; ttl: EpochTimeStamp }>();
+  const cache = new Map<string, { value: Promise<T>; ttl: EpochTimeStamp }>();
 
   return async (key: string, ...args: unknown[]) => {
     const cacheHit = cache.get(key);
     if (cacheHit && cacheHit.ttl > Date.now()) {
-      return cacheHit?.pool;
+      return await cacheHit?.value;
     }
 
-    const result = await fn(key, ...args);
+    const resultPromise = fn(key, ...args);
 
     cache.set(key, {
       ttl: Date.now() + ttlMs,
-      pool: result,
+      value: resultPromise,
     });
 
-    return result;
+    return await resultPromise;
   };
 };
