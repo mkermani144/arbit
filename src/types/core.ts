@@ -65,10 +65,23 @@ export interface TradeLink extends Link {
 }
 
 /**
+ * A finalized trade link
+ */
+export interface FinalizedTradeLink extends Link {
+  input: number;
+  output: number;
+}
+
+/**
  * A sequence of trades executed within a single arbit
  * Each trade in the path contributes to the overall profit calculation
  */
 export type TradePath = TradeLink[];
+
+/**
+ * A finalized trade path
+ */
+export type FinalizedTradePath = FinalizedTradeLink[];
 
 export interface Profit {
   usd: number;
@@ -80,7 +93,6 @@ export interface Profit {
  * final profit
  */
 export interface ArbitResult {
-  tradePath: TradePath;
+  tradePath: FinalizedTradePath;
   profit: Profit;
-  optimalIndex: number;
 }

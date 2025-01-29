@@ -140,9 +140,12 @@ const computeArbitProfit = async (
     percent: maxNetProfitPercent,
   };
   return {
-    tradePath: finalTradePath,
+    tradePath: finalTradePath.map((tradeLink) => ({
+      ...tradeLink,
+      input: tradeLink.input[optimalIndex],
+      output: tradeLink.output[optimalIndex],
+    })),
     profit: profit,
-    optimalIndex,
   };
 };
 
