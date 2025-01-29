@@ -1,16 +1,9 @@
 import { connection } from 'next/server';
 
-import simpleArbitrategy from '@/arbitrategy';
-import { ArbitCore } from '@/core';
-
-import ErgoDex from '@/providers/ergodex';
-import Minswap from '@/providers/minswap';
-import Splash from '@/providers/splash';
-
 import HeroPrice from '@/components/hero-price';
 import Step from '@/components/step';
 
-import { Provider } from '@/types/core';
+import { computeSimpleArbitrategyProfit } from '@/services/simple-arbitrategy';
 
 const providers: Record<string, { name: string; link: string }> = {
   ergodex: {
@@ -28,18 +21,9 @@ const providers: Record<string, { name: string; link: string }> = {
 };
 
 const App = async () => {
-  const arbitResults = new ArbitCore(
-    simpleArbitrategy,
-    new Map<string, Provider>([
-      ['ergodex', ErgoDex],
-      ['splash', Splash],
-      ['minswap', Minswap],
-    ]),
-  );
-
   await connection();
+  const allArbitResults = await computeSimpleArbitrategyProfit();
 
-  const allArbitResults = await arbitResults.start();
   const topProfitableResult = allArbitResults.reduce(
     (topCandidate, arbitResult) =>
       arbitResult.profit.usd > topCandidate.profit.usd

@@ -1,5 +1,5 @@
 import { Provider } from '@/types/core';
-import { timedCache } from '@/utils';
+import { timedCache } from '@/lib/utils';
 import { makeNativePools, makeTokenPools } from '@patternglobal/ergo-dex-sdk';
 import { AssetAmount, Explorer, RustModule } from '@patternglobal/ergo-sdk';
 

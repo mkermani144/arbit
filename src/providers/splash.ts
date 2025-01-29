@@ -1,5 +1,5 @@
 import { Provider } from '@/types/core';
-import { timedCache } from '@/utils';
+import { timedCache } from '@/lib/utils';
 
 type Order = {
   price: string;
