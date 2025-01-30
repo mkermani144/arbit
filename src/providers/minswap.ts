@@ -7,7 +7,7 @@ import {
 } from '@minswap/sdk';
 
 import { Provider } from '@/types/core';
-import { timedCache } from '@/utils';
+import { timedCache } from '@/lib/utils';
 
 const blockFrostApi = new BlockFrostAPI({
   projectId: process.env.BLOCKFROST_PROJECT_ID!,
