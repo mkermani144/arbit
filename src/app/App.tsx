@@ -26,7 +26,7 @@ const App = async () => {
 
   const topProfitableResult = allArbitResults.reduce(
     (topCandidate, arbitResult) =>
-      arbitResult.profit.usd > topCandidate.profit.usd
+      arbitResult.profit.percent > topCandidate.profit.percent
         ? arbitResult
         : topCandidate,
     /**
