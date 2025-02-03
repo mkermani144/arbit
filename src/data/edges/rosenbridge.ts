@@ -3,7 +3,7 @@ import { ArbitEdgeId, GraphEdge } from '@/types/core-v2';
 const rosenBridgeEdges: Record<ArbitEdgeId, GraphEdge> = {
   'rosenbridge:ERG-rsERG': {
     id: 'rosenbridge:ERG-rsERG',
-    nodes: { x: 'ERG', y: 'rsERG' },
+    nodes: { x: 'ergo:ERG', y: 'cardano:rsERG' },
     market: {
       id: '',
       provider: 'rosenbridge',
@@ -11,7 +11,7 @@ const rosenBridgeEdges: Record<ArbitEdgeId, GraphEdge> = {
   },
   'rosenbridge:ADA-rsADA': {
     id: 'rosenbridge:ADA-rsADA',
-    nodes: { x: 'ADA', y: 'rsADA' },
+    nodes: { x: 'cardano:ADA', y: 'ergo:rsADA' },
     market: {
       id: '',
       provider: 'rosenbridge',
@@ -19,7 +19,7 @@ const rosenBridgeEdges: Record<ArbitEdgeId, GraphEdge> = {
   },
   'rosenbridge:RSN-rsRSN': {
     id: 'rosenbridge:RSN-rsRSN',
-    nodes: { x: 'RSN', y: 'rsRSN' },
+    nodes: { x: 'ergo:RSN', y: 'cardano:rsRSN' },
     market: {
       id: '',
       provider: 'rosenbridge',
