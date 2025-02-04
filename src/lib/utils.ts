@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import { AssetInfo } from '@/types/core';
+import { GraphNode } from '@/types/core';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,7 +22,7 @@ const fetchPrice = async (coingeckoId: string) => {
   return response[coingeckoId].usd;
 };
 
-export const asset2usd = async (asset: AssetInfo, assetAmounts: number[]) => {
+export const asset2usd = async (asset: GraphNode, assetAmounts: number[]) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
   return assetAmounts.map(
@@ -30,7 +30,7 @@ export const asset2usd = async (asset: AssetInfo, assetAmounts: number[]) => {
   );
 };
 
-export const usd2asset = async (asset: AssetInfo, usdAmounts: number[]) => {
+export const usd2asset = async (asset: GraphNode, usdAmounts: number[]) => {
   const assetValue = await fetchPrice(asset.coingeckoId);
 
   return usdAmounts.map(

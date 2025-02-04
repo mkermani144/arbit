@@ -1,4 +1,4 @@
-import { ArbitEdgeId, GraphEdge } from '@/types/core-v2';
+import { ArbitEdgeId, GraphEdge } from '@/types/core';
 
 const rosenBridgeEdges: Record<ArbitEdgeId, GraphEdge> = {
   'rosenbridge:ERG-rsERG': {

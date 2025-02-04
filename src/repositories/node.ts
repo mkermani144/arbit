@@ -1,5 +1,5 @@
 import nodes from '@/data/nodes';
-import { ArbitNodeId } from '@/types/core-v2';
+import { ArbitNodeId } from '@/types/core';
 
 export const getAllNodeIds = () => {
   return Object.keys(nodes);

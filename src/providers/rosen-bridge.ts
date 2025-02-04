@@ -1,6 +1,6 @@
 import { asset2usd } from '@/lib/utils';
 import { getNodeById } from '@/repositories/node';
-import { ArbitNodeId, Provider } from '@/types/core-v2';
+import { ArbitNodeId, Provider } from '@/types/core';
 
 const RosenBridge: Provider = {
   id: 'rosenbridge',

@@ -1,4 +1,4 @@
-import { ArbitEdgeId, GraphEdge } from '@/types/core-v2';
+import { ArbitEdgeId, GraphEdge } from '@/types/core';
 
 const minswapEdges: Record<ArbitEdgeId, GraphEdge> = {
   'minswap:ADA-rsERG': {

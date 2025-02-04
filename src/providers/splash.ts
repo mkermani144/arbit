@@ -1,5 +1,6 @@
-import { Provider } from '@/types/core';
-import { timedCache } from '@/lib/utils';
+import { asset2usd, timedCache } from '@/lib/utils';
+import { getNodeById } from '@/repositories/node';
+import { ArbitNodeId, Provider } from '@/types/core';
 
 type Order = {
   price: string;
@@ -40,6 +41,23 @@ const getOrderBook = timedCache(async (marketId: string) => {
 });
 
 const Splash: Provider = {
+  id: 'splash',
+  name: 'Splash',
+  type: 'real',
+  url: 'https://app.splash.trade',
+
+  getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
+    const node = getNodeById(nodeId);
+    const ada = getNodeById('cardano:ADA');
+    const assetPrices = await asset2usd(node, amounts);
+    const [adaPrice] = await asset2usd(ada, [1_000000]);
+    const serviceFee = 1 * adaPrice;
+    const maxNetworkFee = 0.2 * adaPrice;
+    return assetPrices.map(() => {
+      return serviceFee + maxNetworkFee;
+    });
+  },
+
   async x2y(marketId: string, amounts: number[]) {
     const orderBook = await getOrderBook(marketId);
     return Promise.all(

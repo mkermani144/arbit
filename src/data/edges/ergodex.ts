@@ -1,4 +1,4 @@
-import { ArbitEdgeId, GraphEdge } from '@/types/core-v2';
+import { ArbitEdgeId, GraphEdge } from '@/types/core';
 
 const ergoDexEdges: Record<ArbitEdgeId, GraphEdge> = {
   'ergodex:ERG-rsADA': {

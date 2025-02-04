@@ -1,4 +1,4 @@
-import { ArbitNodeId, GraphNode } from '@/types/core-v2';
+import { ArbitNodeId, GraphNode } from '@/types/core';
 
 const ergoNodes: Record<ArbitNodeId, GraphNode> = {
   'ergo:ERG': {

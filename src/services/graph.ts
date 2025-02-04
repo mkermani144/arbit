@@ -1,14 +1,9 @@
 import { FUNDS_RANGE } from '@/constants';
 import { asset2usd, usd2asset } from '@/lib/utils';
-import { providerMap } from '@/providers-v2/providers-map';
+import { providerMap } from '@/providers/providers-map';
 import { getAllEdgeIds, getEdgeById } from '@/repositories/edge';
 import { getAllNodeIds, getNodeById } from '@/repositories/node';
-import {
-  ArbitEdgeId,
-  ArbitGraph,
-  ArbitNodeId,
-  GraphNode,
-} from '@/types/core-v2';
+import { ArbitEdgeId, ArbitGraph, ArbitNodeId, GraphNode } from '@/types/core';
 import { getAdjacentNode } from '@/utils/graph/getAdjacentNode';
 import { isNodePartOfEdge } from '@/utils/graph/isNodePartOfEdge';
 

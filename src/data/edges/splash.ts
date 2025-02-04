@@ -1,4 +1,4 @@
-import { ArbitEdgeId, GraphEdge } from '@/types/core-v2';
+import { ArbitEdgeId, GraphEdge } from '@/types/core';
 
 const splashEdges: Record<ArbitEdgeId, GraphEdge> = {
   'splash:rsERG-ADA': {
