@@ -1,18 +1,19 @@
 import { NextResponse } from 'next/server';
 
-import { computeSimpleArbitrategyProfit } from '@/services/simple-arbitrategy';
+import { FUNDS_RANGE } from '@/constants';
+import { findOptimalArbits } from '@/services/graph';
 
 export const GET = async () => {
   try {
-    const allArbitResults = await computeSimpleArbitrategyProfit();
+    const optimalArbits = await findOptimalArbits(FUNDS_RANGE);
 
     return NextResponse.json(
-      allArbitResults.map((arbitResult) => ({
-        ...arbitResult,
-        tradePath: arbitResult.tradePath.map((tradeLink) => ({
-          ...tradeLink,
-          input: tradeLink.input.toString(),
-          output: tradeLink.output.toString(),
+      optimalArbits.map((arbit) => ({
+        ...arbit,
+        finalOutput: arbit.finalOutput.toString(),
+        path: arbit.path.map((link) => ({
+          edgeId: link.edgeId,
+          optimalInput: link.optimalInput.toString(),
         })),
       })),
     );
