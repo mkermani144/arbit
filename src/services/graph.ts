@@ -142,7 +142,7 @@ const findTopArbit = async (amounts: number[]) => {
         ? currentOptimal
         : optimalArbit;
     },
-    { fund: 0, path: [], profit: -Infinity, startingNode: '', finalOutput: 0 },
+    { fund: Infinity, path: [], profit: 0, startingNode: '', finalOutput: 0 },
   );
 
   return topArbit;
