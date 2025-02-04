@@ -44,6 +44,7 @@ const Splash: Provider = {
   id: 'splash',
   name: 'Splash',
   type: 'real',
+  url: 'https://app.splash.trade',
 
   getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
     const node = getNodeById(nodeId);

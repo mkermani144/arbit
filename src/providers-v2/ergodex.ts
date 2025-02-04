@@ -23,6 +23,7 @@ const ErgoDex: Provider = {
   id: 'ergodex',
   name: 'ErgoDex',
   type: 'real',
+  url: 'https://ergodex.io',
 
   getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
     const node = getNodeById(nodeId);

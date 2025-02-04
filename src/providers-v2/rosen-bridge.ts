@@ -6,6 +6,7 @@ const RosenBridge: Provider = {
   id: 'rosenbridge',
   name: 'Rosen Bridge',
   type: 'abstract',
+  url: 'https://app.rosen.tech',
 
   getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
     const node = getNodeById(nodeId);

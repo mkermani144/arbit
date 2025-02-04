@@ -36,6 +36,7 @@ const Minswap: Provider = {
   id: 'minswap',
   name: 'MinSwap',
   type: 'real',
+  url: 'https://app.minswap.org/swap',
 
   getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
     const node = getNodeById(nodeId);
