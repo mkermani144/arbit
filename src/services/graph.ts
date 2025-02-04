@@ -161,17 +161,22 @@ export const getFrontendArbitData = async () => {
     };
   }
 
+  let { startingNode } = topArbit;
   const steps = topArbit.path.reduce(
     (currentSteps, { edgeId, optimalInput }, index) => {
       const edge = getEdgeById(edgeId);
       const edgeProvider = providerMap.get(edge.market.provider);
 
-      if (edgeProvider?.type === 'abstract') return currentSteps;
+      if (edgeProvider?.type === 'abstract') {
+        startingNode =
+          edge.nodes.x === startingNode ? edge.nodes.y : edge.nodes.x;
+        return currentSteps;
+      }
 
-      if (index === 0) {
-        const fromToken = getNodeById(topArbit.startingNode);
+      if (currentSteps.length === 0) {
+        const fromToken = getNodeById(startingNode);
         const toToken = getNodeById(
-          edge.nodes.x === topArbit.startingNode ? edge.nodes.y : edge.nodes.x,
+          edge.nodes.x === startingNode ? edge.nodes.y : edge.nodes.x,
         );
         return [
           {

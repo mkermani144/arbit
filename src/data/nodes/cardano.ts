@@ -1,4 +1,3 @@
-import { ArbitNodeId, GraphNode } from '@/types/core';
 import { keyBy } from '@/utils/keyBy';
 
 const cardanoNodes = keyBy(

@@ -1,12 +1,9 @@
 export const keyBy = <T>(arr: T[], key: keyof T) => {
   return arr.reduce(
-    (acc, item) => {
-      acc[item[key] as any] = item;
-      return {
-        ...acc,
-        [item[key] as string]: item,
-      };
-    },
+    (acc, item) => ({
+      ...acc,
+      [item[key] as string]: item,
+    }),
     {} as Record<string, T>,
   );
 };
