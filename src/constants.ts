@@ -1,2 +1,3 @@
-export const FUNDS_RANGE_START = 20;
-export const FUNDS_RANGE_END = 500;
+export const FUNDS_RANGE = Array.from({ length: 20 }).map(
+  (_, index) => (index + 1) * 10,
+);
