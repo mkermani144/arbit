@@ -67,7 +67,7 @@ export const humanizeGraphRepresentedArbit = (arbit: GraphRepresentedArbit) => {
     steps,
     profit: {
       usd: arbit.profitUsd,
-      percent: arbit.profitUsd / arbit.fund,
+      percent: (arbit.profitUsd / arbit.fund) * 100,
     },
   };
 };
