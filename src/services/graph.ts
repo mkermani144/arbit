@@ -20,17 +20,17 @@ export const buildGraph = async () => {
 };
 
 const findCycles = async (
-  startingNode: ArbitNodeId,
+  cycleStart: ArbitNodeId,
   currentNode: ArbitNodeId,
   path: { edgeId: ArbitEdgeId; inputs: number[] }[],
-  fees: number[],
-  inputs: number[],
+  pathFees: number[],
+  pathInputs: number[],
   optimalArbits: {
-    path: { edgeId: ArbitEdgeId; optimalInput: number }[];
+    arbit: { edgeId: ArbitEdgeId; optimalInput: number }[];
     finalOutput: number;
-    profit: number;
+    profitUsd: number;
     fund: number;
-    startingNode: ArbitNodeId;
+    arbitStart: ArbitNodeId;
   }[],
 ) => {
   /**
@@ -41,11 +41,12 @@ const findCycles = async (
     return isNodePartOfEdge(currentNode, edge) && index !== path.length - 1;
   });
   if (isVisited) {
-    if (currentNode === startingNode && path.length > 0) {
-      const arbitOutputs = await asset2usd(getNodeById(startingNode), inputs);
+    if (currentNode === cycleStart && path.length > 0) {
+      const arbitOutputs = await asset2usd(getNodeById(cycleStart), pathInputs);
       const [optimalProfit, optimalIndex] = arbitOutputs.reduce(
         (currentOptimal, amount, index) => {
-          const optimalCandidate = amount - FUNDS_RANGE[index] - fees[index];
+          const optimalCandidate =
+            amount - FUNDS_RANGE[index] - pathFees[index];
           return optimalCandidate > currentOptimal[0]
             ? [optimalCandidate, index]
             : currentOptimal;
@@ -53,14 +54,14 @@ const findCycles = async (
         [-Infinity, -1],
       );
       optimalArbits.push({
-        path: path.map(({ edgeId, inputs: amounts }) => ({
+        arbit: path.map(({ edgeId, inputs: amounts }) => ({
           edgeId,
           optimalInput: amounts[optimalIndex],
         })),
-        finalOutput: inputs[optimalIndex],
-        profit: optimalProfit,
+        finalOutput: pathInputs[optimalIndex],
+        profitUsd: optimalProfit,
         fund: FUNDS_RANGE[optimalIndex],
-        startingNode: startingNode,
+        arbitStart: cycleStart,
       });
     }
     return optimalArbits;
@@ -79,23 +80,25 @@ const findCycles = async (
     const edge = getEdgeById(edgeId);
     const provider = providerMap.get(edge.market.provider)!;
     if (isNodePartOfEdge(currentNode, edge)) {
-      path.push({ edgeId, inputs });
+      path.push({ edgeId, inputs: pathInputs });
 
       const adjacentNode = getAdjacentNode(currentNode, edge);
 
       const swapType = edge.nodes.x === currentNode ? 'x2y' : 'y2x';
 
       const [results, edgeFees] = await Promise.all([
-        provider[swapType](edge.market.id, inputs),
+        provider[swapType](edge.market.id, pathInputs),
         provider.type === 'real'
-          ? provider.getExplicitFee(currentNode, inputs)
-          : inputs.map(() => 0),
+          ? provider.getExplicitFee(currentNode, pathInputs)
+          : pathInputs.map(() => 0),
       ]);
 
-      const updatedWeights = fees.map((fee, index) => fee + edgeFees[index]);
+      const updatedWeights = pathFees.map(
+        (fee, index) => fee + edgeFees[index],
+      );
 
       await findCycles(
-        startingNode,
+        cycleStart,
         adjacentNode,
         path,
         updatedWeights,
@@ -137,12 +140,12 @@ const findTopArbit = async (amounts: number[]) => {
 
   const topArbit = optimalArbits.reduce(
     (optimalArbit, currentOptimal) => {
-      return currentOptimal.profit / currentOptimal.fund >
-        optimalArbit.profit / optimalArbit.fund
+      return currentOptimal.profitUsd / currentOptimal.fund >
+        optimalArbit.profitUsd / optimalArbit.fund
         ? currentOptimal
         : optimalArbit;
     },
-    { fund: Infinity, path: [], profit: 0, startingNode: '', finalOutput: 0 },
+    { fund: Infinity, arbit: [], profitUsd: 0, arbitStart: '', finalOutput: 0 },
   );
 
   return topArbit;
@@ -151,7 +154,7 @@ const findTopArbit = async (amounts: number[]) => {
 export const getFrontendArbitData = async () => {
   const topArbit = await findTopArbit(FUNDS_RANGE);
 
-  if (topArbit.profit <= -5) {
+  if (topArbit.profitUsd <= -5) {
     return {
       steps: [],
       profit: {
@@ -161,8 +164,8 @@ export const getFrontendArbitData = async () => {
     };
   }
 
-  let { startingNode } = topArbit;
-  const steps = topArbit.path.reduce(
+  let { arbitStart: startingNode } = topArbit;
+  const steps = topArbit.arbit.reduce(
     (currentSteps, { edgeId, optimalInput }, index) => {
       const edge = getEdgeById(edgeId);
       const edgeProvider = providerMap.get(edge.market.provider);
@@ -188,7 +191,7 @@ export const getFrontendArbitData = async () => {
             to: {
               token: toToken,
               amount:
-                topArbit.path[index + 1].optimalInput / 10 ** toToken.decimals,
+                topArbit.arbit[index + 1].optimalInput / 10 ** toToken.decimals,
             },
             provider: {
               name: edgeProvider!.name,
@@ -218,9 +221,9 @@ export const getFrontendArbitData = async () => {
           to: {
             token: toToken,
             amount:
-              (index === topArbit.path.length - 1
+              (index === topArbit.arbit.length - 1
                 ? topArbit.finalOutput
-                : topArbit.path[index + 1].optimalInput) /
+                : topArbit.arbit[index + 1].optimalInput) /
               10 ** toToken.decimals,
           },
           provider: {
@@ -250,8 +253,8 @@ export const getFrontendArbitData = async () => {
   return {
     steps,
     profit: {
-      usd: topArbit.profit,
-      percent: topArbit.profit / topArbit.fund,
+      usd: topArbit.profitUsd,
+      percent: topArbit.profitUsd / topArbit.fund,
     },
   };
 };
