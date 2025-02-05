@@ -22,7 +22,6 @@ export const buildGraph = async () => {
 const findCycles = async (
   startingNode: ArbitNodeId,
   currentNode: ArbitNodeId,
-  visited: Set<ArbitNodeId>,
   path: { edgeId: ArbitEdgeId; inputs: number[] }[],
   fees: number[],
   inputs: number[],
@@ -37,7 +36,11 @@ const findCycles = async (
   /**
    * Case 1: currentNode is already visited
    */
-  if (visited.has(currentNode)) {
+  const isVisited = path.some(({ edgeId }, index) => {
+    const edge = getEdgeById(edgeId);
+    return isNodePartOfEdge(currentNode, edge) && index !== path.length - 1;
+  });
+  if (isVisited) {
     if (currentNode === startingNode && path.length > 0) {
       const arbitOutputs = await asset2usd(getNodeById(startingNode), inputs);
       const [optimalProfit, optimalIndex] = arbitOutputs.reduce(
@@ -66,7 +69,7 @@ const findCycles = async (
   /**
    * Case 2: currentNode is not visited
    */
-  visited.add(currentNode);
+  // visited.add(currentNode);
 
   const pathEdges = path.map((path) => path.edgeId);
   const remainingEdges = graph.edges.filter(
@@ -94,7 +97,6 @@ const findCycles = async (
       await findCycles(
         startingNode,
         adjacentNode,
-        visited,
         path,
         updatedWeights,
         results,
@@ -105,8 +107,6 @@ const findCycles = async (
     }
   }
 
-  visited.delete(currentNode);
-
   return optimalArbits;
 };
 
@@ -116,7 +116,6 @@ const findNodeOptimalArbits = async (node: ArbitNodeId, amounts: number[]) => {
   const optimalArbits = await findCycles(
     node,
     node,
-    new Set(),
     [],
     new Array(amounts.length).fill(0),
     initialInputs,
