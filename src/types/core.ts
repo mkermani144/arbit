@@ -3,7 +3,7 @@ export type ArbitEdgeId = string;
 export type ArbitProviderId = string;
 export type MarketId = string;
 
-export interface GraphNode {
+export interface ArbitNode {
   id: ArbitNodeId;
   name: string;
   decimals: number;
@@ -21,7 +21,7 @@ export interface Provider {
   getExplicitFee(marketId: string, amounts: number[]): Promise<number[]>;
 }
 
-export interface GraphEdge {
+export interface ArbitEdge {
   id: ArbitEdgeId;
   nodes: {
     x: ArbitNodeId;

@@ -3,7 +3,7 @@ import { asset2usd, usd2asset } from '@/lib/utils';
 import { providerMap } from '@/providers/providers-map';
 import { getAllEdgeIds, getEdgeById } from '@/repositories/edge';
 import { getAllNodeIds, getNodeById } from '@/repositories/node';
-import { ArbitEdgeId, ArbitGraph, ArbitNodeId, GraphNode } from '@/types/core';
+import { ArbitEdgeId, ArbitGraph, ArbitNodeId, ArbitNode } from '@/types/core';
 import { getAdjacentNode } from '@/utils/graph/getAdjacentNode';
 import { isNodePartOfEdge } from '@/utils/graph/isNodePartOfEdge';
 
@@ -233,11 +233,11 @@ export const getFrontendArbitData = async () => {
     [] as {
       id: string;
       from: {
-        token: GraphNode;
+        token: ArbitNode;
         amount: number;
       };
       to: {
-        token: GraphNode;
+        token: ArbitNode;
         amount: number;
       };
       provider: {
