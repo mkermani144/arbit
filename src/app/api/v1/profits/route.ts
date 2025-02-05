@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 
 import { FUNDS_RANGE } from '@/constants';
-import { findOptimalArbits } from '@/services/graph';
+import { buildGraph, findOptimalArbits } from '@/services/graph';
 
 export const GET = async () => {
   try {
+    await buildGraph();
+
     const optimalArbits = await findOptimalArbits(FUNDS_RANGE);
 
     return NextResponse.json(
