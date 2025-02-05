@@ -62,26 +62,22 @@ const Splash: Provider = {
 
   async x2y(marketId: string, amounts: number[]) {
     const orderBook = await getOrderBook(marketId);
-    return Promise.all(
-      amounts.map(async (amount) => {
-        const bid = orderBook.bids.find((bid) => +bid.poolsLiquidity >= amount);
+    return amounts.map((amount) => {
+      const bid = orderBook.bids.find((bid) => +bid.poolsLiquidity >= amount);
 
-        return +(amount * Number(bid?.price ?? 0)).toFixed(0);
-      }),
-    );
+      return +(amount * Number(bid?.price ?? 0)).toFixed(0);
+    });
   },
 
   async y2x(marketId: string, amounts: number[]) {
     const orderBook = await getOrderBook(marketId);
-    return Promise.all(
-      amounts.map(async (amount) => {
-        const ask = orderBook.asks.find(
-          (ask) => +ask.poolsLiquidity * +ask.price >= amount,
-        );
+    return amounts.map((amount) => {
+      const ask = orderBook.asks.find(
+        (ask) => +ask.poolsLiquidity * +ask.price >= amount,
+      );
 
-        return +(amount / Number(ask?.price ?? Infinity)).toFixed(0);
-      }),
-    );
+      return +(amount / Number(ask?.price ?? Infinity)).toFixed(0);
+    });
   },
 };
 
