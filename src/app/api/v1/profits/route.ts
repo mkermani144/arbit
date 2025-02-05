@@ -13,7 +13,7 @@ export const GET = async () => {
       optimalArbits.map((arbit) => ({
         ...arbit,
         finalOutput: arbit.finalOutput.toString(),
-        path: arbit.arbit.map((link) => ({
+        arbit: arbit.arbit.map((link) => ({
           edgeId: link.edgeId,
           optimalInput: link.optimalInput.toString(),
         })),

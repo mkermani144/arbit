@@ -176,39 +176,15 @@ export const getFrontendArbitData = async () => {
         return currentSteps;
       }
 
-      if (currentSteps.length === 0) {
-        const fromToken = getNodeById(startingNode);
-        const toToken = getNodeById(
-          edge.nodes.x === startingNode ? edge.nodes.y : edge.nodes.x,
-        );
-        return [
-          {
-            id: edgeId,
-            from: {
-              token: fromToken,
-              amount: optimalInput / 10 ** fromToken.decimals,
-            },
-            to: {
-              token: toToken,
-              amount:
-                topArbit.arbit[index + 1].optimalInput / 10 ** toToken.decimals,
-            },
-            provider: {
-              name: edgeProvider!.name,
-              url: edgeProvider!.url,
-            },
-          },
-        ];
-      }
+      const lastNode = currentSteps.length
+        ? currentSteps.at(-1)!.to.token.id
+        : startingNode;
+
       const fromToken = getNodeById(
-        currentSteps.at(-1)!.to.token.id === edge.nodes.x
-          ? edge.nodes.x
-          : edge.nodes.y,
+        lastNode === edge.nodes.x ? edge.nodes.x : edge.nodes.y,
       );
       const toToken = getNodeById(
-        currentSteps.at(-1)!.to.token.id === edge.nodes.x
-          ? edge.nodes.y
-          : edge.nodes.x,
+        lastNode === edge.nodes.x ? edge.nodes.y : edge.nodes.x,
       );
       return [
         ...currentSteps,
