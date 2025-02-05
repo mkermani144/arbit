@@ -3,9 +3,15 @@ import { asset2usd, usd2asset } from '@/lib/utils';
 import { providerMap } from '@/providers/providers-map';
 import { getAllEdgeIds, getEdgeById } from '@/repositories/edge';
 import { getAllNodeIds, getNodeById } from '@/repositories/node';
-import { ArbitEdgeId, ArbitGraph, ArbitNodeId, ArbitNode } from '@/types/core';
+import {
+  ArbitEdgeId,
+  ArbitGraph,
+  ArbitNodeId,
+  GraphRepresentedArbit,
+} from '@/types/core';
 import { getAdjacentNode } from '@/utils/graph/getAdjacentNode';
 import { isNodePartOfEdge } from '@/utils/graph/isNodePartOfEdge';
+import { humanizeGraphRepresentedArbit } from '@/utils/humanizeGraphRepresentedArbit';
 
 let graph: ArbitGraph = {
   nodes: [],
@@ -25,13 +31,7 @@ const findCycles = async (
   path: { edgeId: ArbitEdgeId; inputs: number[] }[],
   pathFees: number[],
   pathInputs: number[],
-  optimalArbits: {
-    arbit: { edgeId: ArbitEdgeId; optimalInput: number }[];
-    finalOutput: number;
-    profitUsd: number;
-    fund: number;
-    arbitStart: ArbitNodeId;
-  }[],
+  optimalArbits: GraphRepresentedArbit[],
 ) => {
   /**
    * Case 1: currentNode is already visited
@@ -138,15 +138,12 @@ export const findOptimalArbits = async (amounts: number[]) => {
 const findTopArbit = async (amounts: number[]) => {
   const optimalArbits = await findOptimalArbits(amounts);
 
-  const topArbit = optimalArbits.reduce(
-    (optimalArbit, currentOptimal) => {
-      return currentOptimal.profitUsd / currentOptimal.fund >
-        optimalArbit.profitUsd / optimalArbit.fund
-        ? currentOptimal
-        : optimalArbit;
-    },
-    { fund: Infinity, arbit: [], profitUsd: 0, arbitStart: '', finalOutput: 0 },
-  );
+  const topArbit = optimalArbits.reduce((optimalArbit, currentOptimal) => {
+    return currentOptimal.profitUsd / currentOptimal.fund >
+      optimalArbit.profitUsd / optimalArbit.fund
+      ? currentOptimal
+      : optimalArbit;
+  });
 
   return topArbit;
 };
@@ -154,7 +151,7 @@ const findTopArbit = async (amounts: number[]) => {
 export const getFrontendArbitData = async () => {
   const topArbit = await findTopArbit(FUNDS_RANGE);
 
-  if (topArbit.profitUsd <= -5) {
+  if (topArbit.profitUsd <= 0) {
     return {
       steps: [],
       profit: {
@@ -164,73 +161,5 @@ export const getFrontendArbitData = async () => {
     };
   }
 
-  let { arbitStart: startingNode } = topArbit;
-  const steps = topArbit.arbit.reduce(
-    (currentSteps, { edgeId, optimalInput }, index) => {
-      const edge = getEdgeById(edgeId);
-      const edgeProvider = providerMap.get(edge.market.provider);
-
-      if (edgeProvider?.type === 'abstract') {
-        startingNode =
-          edge.nodes.x === startingNode ? edge.nodes.y : edge.nodes.x;
-        return currentSteps;
-      }
-
-      const lastNode = currentSteps.length
-        ? currentSteps.at(-1)!.to.token.id
-        : startingNode;
-
-      const fromToken = getNodeById(
-        lastNode === edge.nodes.x ? edge.nodes.x : edge.nodes.y,
-      );
-      const toToken = getNodeById(
-        lastNode === edge.nodes.x ? edge.nodes.y : edge.nodes.x,
-      );
-      return [
-        ...currentSteps,
-        {
-          id: edgeId,
-          from: {
-            token: fromToken,
-            amount: optimalInput / 10 ** fromToken.decimals,
-          },
-          to: {
-            token: toToken,
-            amount:
-              (index === topArbit.arbit.length - 1
-                ? topArbit.finalOutput
-                : topArbit.arbit[index + 1].optimalInput) /
-              10 ** toToken.decimals,
-          },
-          provider: {
-            name: edgeProvider!.name,
-            url: edgeProvider!.url,
-          },
-        },
-      ];
-    },
-    [] as {
-      id: string;
-      from: {
-        token: ArbitNode;
-        amount: number;
-      };
-      to: {
-        token: ArbitNode;
-        amount: number;
-      };
-      provider: {
-        name: string;
-        url: string;
-      };
-    }[],
-  );
-
-  return {
-    steps,
-    profit: {
-      usd: topArbit.profitUsd,
-      percent: topArbit.profitUsd / topArbit.fund,
-    },
-  };
+  return humanizeGraphRepresentedArbit(topArbit);
 };

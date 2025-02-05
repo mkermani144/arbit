@@ -37,3 +37,33 @@ export interface ArbitGraph {
   nodes: ArbitNodeId[];
   edges: ArbitEdgeId[];
 }
+
+export interface GraphRepresentedArbit {
+  arbit: { edgeId: ArbitEdgeId; optimalInput: number }[];
+  finalOutput: number;
+  profitUsd: number;
+  fund: number;
+  arbitStart: ArbitNodeId;
+}
+
+export interface Arbit {
+  steps: {
+    id: string;
+    from: {
+      token: ArbitNode;
+      amount: number;
+    };
+    to: {
+      token: ArbitNode;
+      amount: number;
+    };
+    provider: {
+      name: string;
+      url: string;
+    };
+  }[];
+  profit: {
+    usd: number;
+    percent: number;
+  };
+}
