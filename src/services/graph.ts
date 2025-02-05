@@ -81,12 +81,13 @@ const findCycles = async (
       const adjacentNode = getAdjacentNode(currentNode, edge);
 
       const swapType = edge.nodes.x === currentNode ? 'x2y' : 'y2x';
-      const results = await provider[swapType](edge.market.id, inputs);
 
-      const edgeFees =
+      const [results, edgeFees] = await Promise.all([
+        provider[swapType](edge.market.id, inputs),
         provider.type === 'real'
-          ? await provider.getExplicitFee(currentNode, inputs)
-          : inputs.map(() => 0);
+          ? provider.getExplicitFee(currentNode, inputs)
+          : inputs.map(() => 0),
+      ]);
 
       const updatedWeights = fees.map((fee, index) => fee + edgeFees[index]);
 
