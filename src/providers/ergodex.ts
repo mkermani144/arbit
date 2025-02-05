@@ -25,7 +25,7 @@ const ErgoDex: Provider = {
   type: 'real',
   url: 'https://ergodex.io',
 
-  getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
+  async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
     const erg = getNodeById('ergo:ERG');
     const assetPrices = await asset2usd(node, amounts);

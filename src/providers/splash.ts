@@ -46,7 +46,7 @@ const Splash: Provider = {
   type: 'real',
   url: 'https://app.splash.trade',
 
-  getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
+  async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
     const ada = getNodeById('cardano:ADA');
     const assetPrices = await asset2usd(node, amounts);

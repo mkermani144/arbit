@@ -38,7 +38,7 @@ const Minswap: Provider = {
   type: 'real',
   url: 'https://app.minswap.org/swap',
 
-  getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
+  async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
     const ada = getNodeById('cardano:ADA');
     const assetPrices = await asset2usd(node, amounts);

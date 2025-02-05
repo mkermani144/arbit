@@ -8,7 +8,7 @@ const RosenBridge: Provider = {
   type: 'abstract',
   url: 'https://app.rosen.tech',
 
-  getExplicitFee: async (nodeId: ArbitNodeId, amounts: number[]) => {
+  async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
     const asset = getNodeById(node.id);
     const assetPrices = await asset2usd(asset, amounts);
