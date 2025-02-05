@@ -11,7 +11,7 @@ import {
 } from '@/types/core';
 import { getAdjacentNode } from '@/utils/graph/getAdjacentNode';
 import { isNodePartOfEdge } from '@/utils/graph/isNodePartOfEdge';
-import { humanizeGraphRepresentedArbit } from '@/utils/humanizeGraphRepresentedArbit';
+import { humanizeGraphRepresentedArbit } from '@/utils/graph/humanizeGraphRepresentedArbit';
 
 let graph: ArbitGraph = {
   nodes: [],

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { FUNDS_RANGE } from '@/constants';
 import { buildGraph, findOptimalArbits } from '@/services/graph';
-import { humanizeGraphRepresentedArbit } from '@/utils/humanizeGraphRepresentedArbit';
+import { humanizeGraphRepresentedArbit } from '@/utils/graph/humanizeGraphRepresentedArbit';
 
 export const GET = async () => {
   try {
