@@ -6,8 +6,9 @@ import {
   NetworkId,
 } from '@minswap/sdk';
 
-import { Provider } from '@/types/core';
-import { timedCache } from '@/lib/utils';
+import { asset2usd, timedCache } from '@/lib/utils';
+import { getNodeById } from '@/repositories/node';
+import { ArbitNodeId, Provider } from '@/types/core';
 
 const blockFrostApi = new BlockFrostAPI({
   projectId: process.env.BLOCKFROST_PROJECT_ID!,
@@ -32,6 +33,25 @@ const getPools = timedCache(async (marketId: string) => {
 });
 
 const Minswap: Provider = {
+  id: 'minswap',
+  name: 'MinSwap',
+  type: 'real',
+  url: 'https://app.minswap.org/swap',
+
+  async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
+    const node = getNodeById(nodeId);
+    const ada = getNodeById('cardano:ADA');
+    const [assetPrices, [adaPrice]] = await Promise.all([
+      asset2usd(node, amounts),
+      asset2usd(ada, [1_000000]),
+    ]);
+    const serviceFee = 2 * adaPrice;
+    const maxNetworkFee = 0.2 * adaPrice;
+    return assetPrices.map(() => {
+      return serviceFee + maxNetworkFee;
+    });
+  },
+
   async x2y(marketId: string, amounts: number[]) {
     const [poolsV1, poolsV2] = await getPools(marketId);
 
