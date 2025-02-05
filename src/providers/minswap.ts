@@ -41,8 +41,10 @@ const Minswap: Provider = {
   async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
     const ada = getNodeById('cardano:ADA');
-    const assetPrices = await asset2usd(node, amounts);
-    const [adaPrice] = await asset2usd(ada, [1_000000]);
+    const [assetPrices, [adaPrice]] = await Promise.all([
+      asset2usd(node, amounts),
+      asset2usd(ada, [1_000000]),
+    ]);
     const serviceFee = 2 * adaPrice;
     const maxNetworkFee = 0.2 * adaPrice;
     return assetPrices.map(() => {

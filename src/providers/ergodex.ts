@@ -28,8 +28,10 @@ const ErgoDex: Provider = {
   async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
     const erg = getNodeById('ergo:ERG');
-    const assetPrices = await asset2usd(node, amounts);
-    const [ergPrice] = await asset2usd(erg, [1_000000000]);
+    const [assetPrices, [ergPrice]] = await Promise.all([
+      asset2usd(node, amounts),
+      asset2usd(erg, [1_000000000]),
+    ]);
     return assetPrices.map((amount) => {
       const serviceFee = amount * 0.003 * ergPrice; // 0.3%
       const maxExecutionFee = 0.0072 * ergPrice; // For Nitro of 1.2
