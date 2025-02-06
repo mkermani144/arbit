@@ -18,6 +18,14 @@ const minswapEdges = keyBy(
         provider: 'minswap',
       },
     },
+    {
+      id: 'minswap:ADA-SNEK',
+      nodes: { x: 'cardano:ADA', y: 'cardano:SNEK' },
+      market: {
+        id: '63f2cbfa5bf8b68828839a2575c8c70f14a32f50ebbfa7c654043269793be896-f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c-2ffadbb87144e875749122e0bbb9f535eeaa7f5660c6c4a91bcc4121e477f08d',
+        provider: 'minswap',
+      },
+    },
   ],
   'id',
 );

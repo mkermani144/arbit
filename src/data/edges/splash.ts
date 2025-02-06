@@ -18,6 +18,14 @@ const splashEdges = keyBy(
         provider: 'splash',
       },
     },
+    {
+      id: 'splash:SNEK-ADA',
+      nodes: { x: 'cardano:SNEK', y: 'cardano:ADA' },
+      market: {
+        id: '279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f.534e454b',
+        provider: 'splash',
+      },
+    },
   ],
   'id',
 );
