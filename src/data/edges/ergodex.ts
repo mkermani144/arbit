@@ -26,6 +26,14 @@ const ergoDexEdges = keyBy(
         provider: 'ergodex',
       },
     },
+    {
+      id: 'ergodex:ERG-rsSNEK',
+      nodes: { x: 'ergo:ERG', y: 'ergo:rsSNEK' },
+      market: {
+        id: '914ff648dc803839a9d6258f2bb7cd32328afbdd3707c6680ccaf47413ef100c',
+        provider: 'ergodex',
+      },
+    },
   ],
   'id',
 );

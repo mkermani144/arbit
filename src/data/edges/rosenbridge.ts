@@ -26,6 +26,14 @@ const rosenBridgeEdges = keyBy(
         provider: 'rosenbridge',
       },
     },
+    {
+      id: 'rosenbridge:SNEK-rsSNEK',
+      nodes: { x: 'cardano:SNEK', y: 'ergo:rsSNEK' },
+      market: {
+        id: '',
+        provider: 'rosenbridge',
+      },
+    },
   ],
   'id',
 );
