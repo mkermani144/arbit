@@ -28,7 +28,7 @@ const ergoNodes = keyBy(
     {
       id: 'ergo:rsSNEK',
       name: 'rsSNEK',
-      coingeckoId: 'rosen-bridge',
+      coingeckoId: 'snek',
       decimals: 0,
       nativeId:
         '8b08cdd5449a9592a9e79711d7d79249d7a03c535d17efaee83e216e80a44c4b',
