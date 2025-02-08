@@ -16,6 +16,7 @@ export interface Provider {
   name: string;
   type: 'real' | 'abstract';
   url: string;
+  prefetchMarketData?: () => Promise<void>;
   x2y(marketId: string, amounts: number[]): Promise<number[]>;
   y2x(marketId: string, amounts: number[]): Promise<number[]>;
   getExplicitFee(marketId: string, amounts: number[]): Promise<number[]>;
