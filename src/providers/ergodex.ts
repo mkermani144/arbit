@@ -1,6 +1,7 @@
 import { makeNativePools, makeTokenPools } from '@patternglobal/ergo-dex-sdk';
 import { AssetAmount, Explorer, RustModule } from '@patternglobal/ergo-sdk';
 
+import ergoDexEdges from '@/data/edges/ergodex';
 import { asset2usd, timedCache } from '@/lib/utils';
 import { getNodeById } from '@/repositories/node';
 import { ArbitNodeId, Provider } from '@/types/core';
@@ -24,6 +25,10 @@ const ErgoDex: Provider = {
   name: 'ErgoDex',
   type: 'real',
   url: 'https://ergodex.io',
+
+  async prefetchMarketData() {
+    Object.values(ergoDexEdges).map((edge) => getPool(edge.market.id));
+  },
 
   async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);

@@ -6,6 +6,7 @@ import {
   NetworkId,
 } from '@minswap/sdk';
 
+import minswapEdges from '@/data/edges/minswap';
 import { asset2usd, timedCache } from '@/lib/utils';
 import { getNodeById } from '@/repositories/node';
 import { ArbitNodeId, Provider } from '@/types/core';
@@ -18,6 +19,13 @@ const adapter = new BlockfrostAdapter({
   blockFrost: blockFrostApi,
   networkId: NetworkId.MAINNET,
 });
+
+/**
+ * This is required to prevent calling `getAllV2Pools` multiple times per market
+ */
+adapter.getAllV2Pools = timedCache(
+  adapter.getAllV2Pools.bind(adapter),
+) as unknown as () => ReturnType<typeof adapter.getAllV2Pools>;
 const getPools = timedCache(async (marketId: string) => {
   const [v1LPId, v2PolicyId, v2TokenName] = marketId.split('-');
 
@@ -37,6 +45,10 @@ const Minswap: Provider = {
   name: 'MinSwap',
   type: 'real',
   url: 'https://app.minswap.org/swap',
+
+  async prefetchMarketData() {
+    Object.values(minswapEdges).map((edge) => getPools(edge.market.id));
+  },
 
   async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);

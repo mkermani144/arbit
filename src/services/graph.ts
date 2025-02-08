@@ -129,6 +129,8 @@ const findNodeOptimalArbits = async (node: ArbitNodeId, amounts: number[]) => {
 };
 
 export const findOptimalArbits = async (amounts: number[]) => {
+  providerMap.forEach((provider) => provider.prefetchMarketData?.());
+
   const optimalArbits = await Promise.all(
     graph.nodes.map((node) => findNodeOptimalArbits(node, amounts)),
   );

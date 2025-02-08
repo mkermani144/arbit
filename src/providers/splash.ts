@@ -1,3 +1,4 @@
+import splashEdges from '@/data/edges/splash';
 import { asset2usd, timedCache } from '@/lib/utils';
 import { getNodeById } from '@/repositories/node';
 import { ArbitNodeId, Provider } from '@/types/core';
@@ -45,6 +46,10 @@ const Splash: Provider = {
   name: 'Splash',
   type: 'real',
   url: 'https://app.splash.trade',
+
+  async prefetchMarketData() {
+    Object.values(splashEdges).map((edge) => getOrderBook(edge.market.id));
+  },
 
   async getExplicitFee(nodeId: ArbitNodeId, amounts: number[]) {
     const node = getNodeById(nodeId);
