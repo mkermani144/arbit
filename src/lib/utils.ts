@@ -40,7 +40,7 @@ export const usd2asset = async (asset: ArbitNode, usdAmounts: number[]) => {
 
 export const timedCache = <T>(
   fn: (key: string, ...args: unknown[]) => Promise<T>,
-  ttlMs = 10000,
+  ttlMs = 20000,
 ) => {
   const cache = new Map<string, { value: Promise<T>; ttl: EpochTimeStamp }>();
 
