@@ -26,6 +26,14 @@ const minswapV2Edges = keyBy(
         provider: 'minswapv2',
       },
     },
+    {
+      id: 'minswapv2:ADA-rsBTC',
+      nodes: { x: 'cardano:ADA', y: 'cardano:rsBTC' },
+      market: {
+        id: 'f5808c2c990d86da54bfc97d89cee6efa20cd8461616359478d96b4c-ece87801e02b3c21436f212156acee8f53ff6678abf9e03a9e52ab42ca6be00c',
+        provider: 'minswapv2',
+      },
+    },
   ],
   'id',
 );

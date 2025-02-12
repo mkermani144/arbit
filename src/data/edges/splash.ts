@@ -26,6 +26,14 @@ const splashEdges = keyBy(
         provider: 'splash',
       },
     },
+    {
+      id: 'splash:rsBTC-ADA',
+      nodes: { x: 'cardano:rsBTC', y: 'cardano:ADA' },
+      market: {
+        id: '2dbc49f682ad21f6d18705cf446f9f7a277731ab70ae21a454f888b2.7273425443',
+        provider: 'splash',
+      },
+    },
   ],
   'id',
 );

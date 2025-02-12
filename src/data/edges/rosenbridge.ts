@@ -34,6 +34,14 @@ const rosenBridgeEdges = keyBy(
         provider: 'rosenbridge',
       },
     },
+    {
+      id: 'rosenbridge:rsBTC-rsBTC',
+      nodes: { x: 'cardano:rsBTC', y: 'ergo:rsBTC' },
+      market: {
+        id: '',
+        provider: 'rosenbridge',
+      },
+    },
   ],
   'id',
 );
