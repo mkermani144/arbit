@@ -33,6 +33,14 @@ const cardanoNodes = keyBy(
       nativeId:
         '279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f.534e454b',
     },
+    {
+      id: 'cardano:rsBTC',
+      name: 'rsBTC',
+      coingeckoId: 'bitcoin',
+      decimals: 8,
+      nativeId:
+        '2dbc49f682ad21f6d18705cf446f9f7a277731ab70ae21a454f888b2.7273425443',
+    },
   ],
   'id',
 );

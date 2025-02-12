@@ -34,6 +34,14 @@ const ergoDexEdges = keyBy(
         provider: 'ergodex',
       },
     },
+    {
+      id: 'ergodex:ERG-rsBTC',
+      nodes: { x: 'ergo:ERG', y: 'ergo:rsBTC' },
+      market: {
+        id: '47a811c68e49f6bfa6629602037ee65f8d175ddbc7b64bdb65ad40599b812fd0',
+        provider: 'ergodex',
+      },
+    },
   ],
   'id',
 );

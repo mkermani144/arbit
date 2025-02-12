@@ -33,6 +33,14 @@ const ergoNodes = keyBy(
       nativeId:
         '8b08cdd5449a9592a9e79711d7d79249d7a03c535d17efaee83e216e80a44c4b',
     },
+    {
+      id: 'ergo:rsBTC',
+      name: 'rsBTC',
+      coingeckoId: 'bitcoin',
+      decimals: 8,
+      nativeId:
+        '7a51950e5f548549ec1aa63ffdc38279505b11e7e803d01bcf8347e0123c88b0',
+    },
   ],
   'id',
 );
