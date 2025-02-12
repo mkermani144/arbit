@@ -32,6 +32,7 @@ const findCycles = async (
   pathFees: number[],
   pathInputs: number[],
   optimalArbits: GraphRepresentedArbit[],
+  nodesToIgnore: ArbitNodeId[],
 ) => {
   /**
    * Case 1: currentNode is already visited
@@ -70,8 +71,6 @@ const findCycles = async (
   /**
    * Case 2: currentNode is not visited
    */
-  // visited.add(currentNode);
-
   const pathEdges = path.map((path) => path.edgeId);
   const remainingEdges = graph.edges.filter(
     (edge) => !pathEdges.includes(edge),
@@ -79,7 +78,10 @@ const findCycles = async (
   for (const edgeId of remainingEdges) {
     const edge = getEdgeById(edgeId);
     const provider = providerMap.get(edge.market.provider)!;
-    if (isNodePartOfEdge(currentNode, edge)) {
+    if (
+      isNodePartOfEdge(currentNode, edge) &&
+      !nodesToIgnore.some((innerNode) => isNodePartOfEdge(innerNode, edge))
+    ) {
       path.push({ edgeId, inputs: pathInputs });
 
       const adjacentNode = getAdjacentNode(currentNode, edge);
@@ -104,6 +106,7 @@ const findCycles = async (
         updatedWeights,
         results,
         optimalArbits,
+        nodesToIgnore,
       );
 
       path.pop();
@@ -113,7 +116,11 @@ const findCycles = async (
   return optimalArbits;
 };
 
-const findNodeOptimalArbits = async (node: ArbitNodeId, amounts: number[]) => {
+const findNodeOptimalArbits = async (
+  node: ArbitNodeId,
+  amounts: number[],
+  nodesToIgnore: ArbitEdgeId[],
+) => {
   const initialInputs = await usd2asset(getNodeById(node), amounts);
 
   const optimalArbits = await findCycles(
@@ -123,6 +130,7 @@ const findNodeOptimalArbits = async (node: ArbitNodeId, amounts: number[]) => {
     new Array(amounts.length).fill(0),
     initialInputs,
     [],
+    nodesToIgnore,
   );
 
   return optimalArbits;
@@ -132,7 +140,9 @@ export const findOptimalArbits = async (amounts: number[]) => {
   providerMap.forEach((provider) => provider.prefetchMarketData?.());
 
   const optimalArbits = await Promise.all(
-    graph.nodes.map((node) => findNodeOptimalArbits(node, amounts)),
+    graph.nodes.map((node, index) =>
+      findNodeOptimalArbits(node, amounts, graph.nodes.slice(0, index)),
+    ),
   );
   return optimalArbits.flat();
 };
