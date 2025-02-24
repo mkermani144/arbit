@@ -41,6 +41,22 @@ const cardanoNodes = keyBy(
       nativeId:
         '2dbc49f682ad21f6d18705cf446f9f7a277731ab70ae21a454f888b2.7273425443',
     },
+    {
+      id: 'cardano:rsCOMET',
+      name: 'rsCOMET',
+      coingeckoId: 'comet-token',
+      decimals: 0,
+      nativeId:
+        'd85d4588d4625b370121597ff88f3c1fa66f2a0cb7e4a7a9573a3c3e.7273434f4d4554',
+    },
+    {
+      id: 'cardano:HOSKY',
+      name: 'HOSKY',
+      coingeckoId: 'hosky',
+      decimals: 0,
+      nativeId:
+        'a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481c235.484f534b59',
+    },
   ],
   'id',
 );

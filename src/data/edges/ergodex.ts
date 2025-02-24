@@ -42,6 +42,22 @@ const ergoDexEdges = keyBy(
         provider: 'ergodex',
       },
     },
+    {
+      id: 'ergodex:COMET-rsHOSKY',
+      nodes: { x: 'ergo:COMET', y: 'ergo:rsHOSKY' },
+      market: {
+        id: '66fd1a6e49858a7e1ee12609057d407f2c3f96ce4e363e06d8dbae1468e01c64',
+        provider: 'ergodex',
+      },
+    },
+    {
+      id: 'ergodex:ERG-COMET',
+      nodes: { x: 'ergo:ERG', y: 'ergo:COMET' },
+      market: {
+        id: '1f01dc8e29806d96ca0b79f8e798cd8cfce51c0e676aaedf6ab3464b37da9dfd',
+        provider: 'ergodex',
+      },
+    },
   ],
   'id',
 );

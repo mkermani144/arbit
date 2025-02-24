@@ -34,6 +34,14 @@ const splashEdges = keyBy(
         provider: 'splash',
       },
     },
+    {
+      id: 'splash:rsCOMET-ADA',
+      nodes: { x: 'cardano:rsCOMET', y: 'cardano:ADA' },
+      market: {
+        id: 'd85d4588d4625b370121597ff88f3c1fa66f2a0cb7e4a7a9573a3c3e.7273434f4d4554',
+        provider: 'splash',
+      },
+    },
   ],
   'id',
 );
