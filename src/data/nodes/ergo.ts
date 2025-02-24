@@ -41,6 +41,22 @@ const ergoNodes = keyBy(
       nativeId:
         '7a51950e5f548549ec1aa63ffdc38279505b11e7e803d01bcf8347e0123c88b0',
     },
+    {
+      id: 'ergo:COMET',
+      name: 'COMET',
+      coingeckoId: 'comet-token',
+      decimals: 0,
+      nativeId:
+        '0cd8c9f416e5b1ca9f986a7f10a84191dfb85941619e49e53c0dc30ebf83324b',
+    },
+    {
+      id: 'ergo:rsHOSKY',
+      name: 'rsHOSKY',
+      coingeckoId: 'hosky',
+      decimals: 0,
+      nativeId:
+        '6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189',
+    },
   ],
   'id',
 );

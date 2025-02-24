@@ -42,6 +42,22 @@ const rosenBridgeEdges = keyBy(
         provider: 'rosenbridge',
       },
     },
+    {
+      id: 'rosenbridge:COMET-rsCOMET',
+      nodes: { x: 'ergo:COMET', y: 'cardano:rsCOMET' },
+      market: {
+        id: '',
+        provider: 'rosenbridge',
+      },
+    },
+    {
+      id: 'rosenbridge:HOSKY-rsHOSKY',
+      nodes: { x: 'cardano:HOSKY', y: 'ergo:rsHOSKY' },
+      market: {
+        id: '',
+        provider: 'rosenbridge',
+      },
+    },
   ],
   'id',
 );

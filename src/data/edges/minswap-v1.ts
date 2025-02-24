@@ -26,6 +26,14 @@ const minswapV1Edges = keyBy(
         provider: 'minswapv1',
       },
     },
+    {
+      id: 'minswapv1:ADA-HOSKY',
+      nodes: { x: 'cardano:ADA', y: 'cardano:HOSKY' },
+      market: {
+        id: '11e236a5a8826f3f8fbc1114df918b945b0b5d8f9c74bd383f96a0ea14bffade',
+        provider: 'minswapv1',
+      },
+    },
   ],
   'id',
 );
