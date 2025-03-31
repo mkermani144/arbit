@@ -40,7 +40,7 @@ const MinswapV1: Provider = {
       asset2usd(node, amounts),
       asset2usd(ada, [1_000000]),
     ]);
-    const maxNetworkFee = 0.2 * adaPrice;
+    const maxNetworkFee = 1.09 * adaPrice;
     return assetPrices.map(() => {
       return maxNetworkFee;
     });
