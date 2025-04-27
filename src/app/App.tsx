@@ -31,6 +31,8 @@ const App = async () => {
               toAmount={step.to.amount}
               providerName={step.provider.name}
               providerLink={step.provider.url}
+              stepProfit={step.profit}
+              stepFee={step.fee}
             />
           );
         })}
