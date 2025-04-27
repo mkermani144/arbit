@@ -40,7 +40,11 @@ export interface ArbitGraph {
 }
 
 export interface GraphRepresentedArbit {
-  arbit: { edgeId: ArbitEdgeId; optimalInput: number }[];
+  arbit: {
+    edgeId: ArbitEdgeId;
+    optimalInput: number;
+    fee: number;
+  }[];
   finalOutput: number;
   profitUsd: number;
   fund: number;
@@ -61,6 +65,13 @@ export interface Arbit {
     provider: {
       name: string;
       url: string;
+    };
+    fee: {
+      usd: number;
+    };
+    profit: {
+      usd: number;
+      percent: number;
     };
   }[];
   profit: {

@@ -10,9 +10,12 @@ export const GET = async () => {
 
     const optimalArbits = await findOptimalArbits(FUNDS_RANGE);
 
+    const humanizedArbits = await Promise.all(
+      optimalArbits.map(humanizeGraphRepresentedArbit),
+    );
+
     return NextResponse.json(
-      optimalArbits
-        .map(humanizeGraphRepresentedArbit)
+      humanizedArbits
         .sort((a, b) => (a.profit.percent < b.profit.percent ? 1 : -1))
         .map((arbit) => ({
           ...arbit,
@@ -21,10 +24,12 @@ export const GET = async () => {
             from: {
               ...step.from,
               amount: step.from.amount.toString(),
+              amountRaw: undefined,
             },
             to: {
               ...step.to,
               amount: step.to.amount.toString(),
+              amountRaw: undefined,
             },
           })),
         })),

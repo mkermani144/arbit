@@ -25,10 +25,17 @@ export const buildGraph = async () => {
   };
 };
 
+// Track individual step fees
+interface PathStep {
+  edgeId: ArbitEdgeId;
+  inputs: number[];
+  fees: number[];
+}
+
 const findCycles = async (
   cycleStart: ArbitNodeId,
   currentNode: ArbitNodeId,
-  path: { edgeId: ArbitEdgeId; inputs: number[] }[],
+  path: PathStep[],
   pathFees: number[],
   pathInputs: number[],
   optimalArbits: GraphRepresentedArbit[],
@@ -55,9 +62,10 @@ const findCycles = async (
         [-Infinity, -1],
       );
       optimalArbits.push({
-        arbit: path.map(({ edgeId, inputs: amounts }) => ({
+        arbit: path.map(({ edgeId, inputs: amounts, fees }) => ({
           edgeId,
           optimalInput: amounts[optimalIndex],
+          fee: fees[optimalIndex],
         })),
         finalOutput: pathInputs[optimalIndex],
         profitUsd: optimalProfit,
@@ -71,7 +79,7 @@ const findCycles = async (
   /**
    * Case 2: currentNode is not visited
    */
-  const pathEdges = path.map((path) => path.edgeId);
+  const pathEdges = path.map((pathStep) => pathStep.edgeId);
   const remainingEdges = graph.edges.filter(
     (edge) => !pathEdges.includes(edge),
   );
@@ -82,8 +90,6 @@ const findCycles = async (
       isNodePartOfEdge(currentNode, edge) &&
       !nodesToIgnore.some((innerNode) => isNodePartOfEdge(innerNode, edge))
     ) {
-      path.push({ edgeId, inputs: pathInputs });
-
       const adjacentNode = getAdjacentNode(currentNode, edge);
 
       const swapType = edge.nodes.x === currentNode ? 'x2y' : 'y2x';
@@ -94,6 +100,8 @@ const findCycles = async (
           ? provider.getExplicitFee(currentNode, pathInputs)
           : pathInputs.map(() => 0),
       ]);
+
+      path.push({ edgeId, inputs: pathInputs, fees: edgeFees });
 
       const updatedWeights = pathFees.map(
         (fee, index) => fee + edgeFees[index],
@@ -173,5 +181,5 @@ export const getFrontendArbitData = async () => {
     };
   }
 
-  return humanizeGraphRepresentedArbit(topArbit);
+  return await humanizeGraphRepresentedArbit(topArbit);
 };

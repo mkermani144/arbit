@@ -8,6 +8,7 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface StepProps {
   fromToken: string;
@@ -16,6 +17,13 @@ interface StepProps {
   toAmount: number;
   providerName: string;
   providerLink: string;
+  stepProfit?: {
+    usd: number;
+    percent: number;
+  };
+  stepFee?: {
+    usd: number;
+  };
 }
 
 const Step = ({
@@ -25,9 +33,45 @@ const Step = ({
   toAmount,
   providerName,
   providerLink,
+  stepProfit,
+  stepFee,
 }: StepProps) => (
   <Card className="w-[300px] lg:w-[350px]">
-    <CardHeader />
+    <CardHeader>
+      <div className="flex flex-row items-center justify-between gap-1">
+        {stepProfit && (
+          <div className="flex rounded-md overflow-hidden border border-primary/50">
+            <div
+              className={cn(
+                'px-2 py-1 text-sm font-medium text-primary',
+                stepProfit.usd > 0
+                  ? 'bg-green-950/30 dark:bg-green-200/30'
+                  : 'bg-red-950/30 dark:bg-red-200/30',
+              )}
+            >
+              {stepProfit.usd > 0 ? 'P' : 'L'}
+            </div>
+            <div className="bg-transparent px-2 py-1 text-sm font-medium">
+              {stepProfit.usd > 0 ? '+' : '-'}$
+              {Math.abs(stepProfit.usd).toFixed(2)}{' '}
+              <span className="text-[10px] text-muted-foreground">
+                {stepProfit.percent.toFixed(2)}%
+              </span>
+            </div>
+          </div>
+        )}
+        {stepFee && (
+          <div className="flex rounded-md overflow-hidden border border-primary/50">
+            <div className="bg-primary/20 text-primary px-2 py-1 text-xs font-medium">
+              Fee
+            </div>
+            <div className="bg-transparent px-2 py-1 text-xs font-medium">
+              -${stepFee.usd.toFixed(2)}
+            </div>
+          </div>
+        )}
+      </div>
+    </CardHeader>
     <CardContent>
       <div className="flex w-full items-center">
         <div className="flex flex-1 flex-col border-right items-center">
