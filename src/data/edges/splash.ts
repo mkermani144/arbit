@@ -1,5 +1,7 @@
 import { keyBy } from '@/utils/keyBy';
 
+const disabledEdges = ['splash:rsRSN-ADA'];
+
 const splashEdges = keyBy(
   [
     {
@@ -42,7 +44,7 @@ const splashEdges = keyBy(
         provider: 'splash',
       },
     },
-  ],
+  ].filter((edge) => !disabledEdges.includes(edge.id)),
   'id',
 );
 
